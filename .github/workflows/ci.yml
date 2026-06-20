@@ -108,6 +108,51 @@ jobs:
 
           echo "PR title matches the required format: $EXPECTED"
 
+  verify-authorship:
+    name: Verify PR Author Wrote The Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare PR author against each commit's author
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "PR opened by: $PR_AUTHOR"
+          echo ""
+
+          # GitHub logins are case-insensitive, so normalise before comparing.
+          EXPECTED=$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')
+          FAILED=0
+
+          # The PR commits API returns the GitHub account linked to each commit
+          # in `.author.login` (null when the commit email isn't linked to any
+          # GitHub user). Compare every commit's author to the PR opener.
+          while read -r LOGIN SHA; do
+            ACTUAL=$(echo "$LOGIN" | tr '[:upper:]' '[:lower:]')
+
+            if [ "$LOGIN" = "null" ] || [ -z "$LOGIN" ]; then
+              echo "ERROR: commit $SHA has no linked GitHub account; cannot verify authorship."
+              FAILED=1
+            elif [ "$ACTUAL" != "$EXPECTED" ]; then
+              echo "ERROR: commit $SHA was authored by '$LOGIN', but the PR was opened by '$PR_AUTHOR'."
+              FAILED=1
+            else
+              echo "OK: commit $SHA authored by $LOGIN"
+            fi
+          done < <(gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '.[] | "\(.author.login) \(.sha)"')
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "Every commit in this PR must be authored by the person who opened it ($PR_AUTHOR)."
+            echo "If a commit shows a different author, you submitted code written by someone else."
+            exit 1
+          fi
+
+          echo ""
+          echo "All commits were authored by the PR opener: $PR_AUTHOR"
+
   verify:
     name: Format, Lint, Test & Build
     runs-on: ubuntu-latest
@@ -154,7 +199,7 @@ jobs:
     name: Submit Student Info
     runs-on: ubuntu-latest
     # Runs last: only after the student info is valid AND all checks pass.
-    needs: [extract-student-info, verify]
+    needs: [extract-student-info, verify, verify-authorship]
     steps:
       - name: Submit student details to API
         env:
