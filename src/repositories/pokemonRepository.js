@@ -115,3 +115,4 @@ export const getPokemonByType = async (typeName) => {
     throw new Error(`Failed to fetch Pokemon by type: ${error.message}`);
   }
 };
+
