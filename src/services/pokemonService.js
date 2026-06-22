@@ -73,7 +73,6 @@ const formatPokemonData = (pokemon, species = null) => {
   };
 };
 
-
 /**
  * Get a single, fully-formatted Pokemon. Returns null if not found.
  */
