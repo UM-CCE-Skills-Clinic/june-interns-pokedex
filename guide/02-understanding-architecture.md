@@ -96,6 +96,7 @@ async getPokemonDetails(nameOrId) {
 
 ### Repositories (`src/repositories/`)
 
+
 **Job:** Fetch data from external sources (APIs, databases).
 
 ```javascript

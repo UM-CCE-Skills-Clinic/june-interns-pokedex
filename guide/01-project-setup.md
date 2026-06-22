@@ -9,7 +9,8 @@ In this section, you'll fork the repository, clone it to your machine, and set u
 1. Go to the repository on GitHub
 2. Click the **Fork** button in the top-right corner
 3. Select your GitHub account as the destination
-4. Wait for the fork to complete
+4. Wait for
+ the fork to complete
 
 You now have your own copy of the repository under your GitHub account.
 
@@ -37,6 +38,7 @@ cd inter-workshop
 1. Create a new branch using the format `lastname/pokedex-pull-request`:
 
 ```bash
+
 git checkout -b dela-cruz/pokedex-pull-request
 ```
 
@@ -51,6 +53,7 @@ git checkout -b dela-cruz/pokedex-pull-request
 | John Smith | `smith/pokedex-pull-request` |
 
 ---
+
 
 ## Step 4: Install Dependencies
 
@@ -74,6 +77,7 @@ This reads `package.json` and installs all required packages into `node_modules/
 | `ejs` | Template engine for rendering HTML |
 | `axios` | HTTP client for API requests |
 | `dotenv` | Load environment variables from `.env` file |
+
 
 **Development Dependencies:**
 
@@ -127,7 +131,19 @@ MAX_SEARCH_LIMIT=1000
 mkdir -p src/config src/routes src/controllers src/services src/repositories src/views/partials public
 ```
 
-**Windows (Command Prompt):**
+**Windows (Command ProPORT=3000
+NODE_ENV=development
+POKEAPI_BASE_URL=https://pokeapi.co/api/v2PORT=3000
+NODE_ENV=development
+POKEAPI_BASE_URL=https://pokeapi.co/api/v2
+DEFAULT_PAGE_LIMIT=20
+MAX_SEARCH_LIMIT=1000
+DEFAULT_PAGE_LIMIT=20
+MAX_SEARCH_LIMIT=1000mpt):**PORT=3000
+NODE_ENV=development
+POKEAPI_BASE_URL=https://pokeapi.co/api/v2
+DEFAULT_PAGE_LIMIT=20
+MAX_SEARCH_LIMIT=1000
 ```cmd
 mkdir src\config src\routes src\controllers src\services src\repositories src\views\partials public
 ```
