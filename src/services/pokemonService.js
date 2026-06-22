@@ -22,6 +22,7 @@ const formatStatName = (name) => {
   };
   return statNames[name] || formatName(name);
 };
+
 /**
  * Transform raw PokeAPI data into a display-ready object.
  */
