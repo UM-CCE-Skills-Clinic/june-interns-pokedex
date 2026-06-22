@@ -74,6 +74,25 @@ const formatPokemonData = (pokemon, species = null) => {
 };
 
 /**
+ * Get a single, fully-formatted Pokemon. Returns null if not found.
+ */
+export const getPokemonDetails = async (nameOrId) => {
+  const pokemon = await pokemonRepository.getPokemonByNameOrId(nameOrId);
+  if (!pokemon) {
+    return null;
+  }
+
+  let species = null;
+  try {
+    species = await pokemonRepository.getPokemonSpecies(nameOrId);
+  } catch (error) {
+    species = null;
+  }
+
+  return formatPokemonData(pokemon, species);
+};
+
+/**
  * Paginated list of Pokemon with full details for each entry.
  */
 export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
