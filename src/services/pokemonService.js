@@ -27,8 +27,7 @@ const formatPokemonData = (pokemon, species = null) => {
       ?.find((entry) => entry.language.name === 'en')
       ?.flavor_text?.replace(/[\f\n\r]/g, ' ') || 'No description available.';
 
-  const genus =
-    species?.genera?.find((g) => g.language.name === 'en')?.genus || 'Unknown';
+  const genus = species?.genera?.find((g) => g.language.name === 'en')?.genus || 'Unknown';
 
   const stats = pokemon.stats.map((s) => ({
     name: formatStatName(s.stat.name),
@@ -87,10 +86,7 @@ export const getPokemonDetails = async (nameOrId) => {
   return formatPokemonData(pokemon, species);
 };
 
-export const getAllPokemon = async (
-  page = 1,
-  limit = config.pagination.defaultLimit
-) => {
+export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
   const offset = (page - 1) * limit;
   const data = await pokemonRepository.getAllPokemon(limit, offset);
 
@@ -127,9 +123,7 @@ export const searchPokemon = async (query) => {
   const searchResults = await pokemonRepository.searchPokemon(query);
 
   const pokemonWithDetails = await Promise.all(
-    searchResults.results
-      .slice(0, 20)
-      .map((pokemon) => getPokemonDetails(pokemon.name))
+    searchResults.results.slice(0, 20).map((pokemon) => getPokemonDetails(pokemon.name))
   );
 
   return {

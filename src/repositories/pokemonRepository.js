@@ -16,9 +16,7 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
 
 export const getPokemonByNameOrId = async (nameOrId) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -42,10 +40,7 @@ export const getPokemonSpecies = async (nameOrId) => {
   }
 };
 
-export const searchPokemon = async (
-  query,
-  limit = config.pagination.maxSearchLimit
-) => {
+export const searchPokemon = async (query, limit = config.pagination.maxSearchLimit) => {
   try {
     const response = await axios.get(`${BASE_URL}/pokemon`, {
       params: { limit, offset: 0 }
@@ -77,9 +72,7 @@ export const getPokemonTypes = async () => {
 
 export const getPokemonByType = async (typeName) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/type/${typeName.toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/type/${typeName.toLowerCase()}`);
 
     return response.data.pokemon.map((p) => p.pokemon);
   } catch (error) {
