@@ -183,4 +183,3 @@ export const getPokemonByType = async (
     hasPrevPage: page > 1
   };
 };
-
