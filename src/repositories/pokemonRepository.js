@@ -19,7 +19,6 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
     throw new Error(`Failed to fetch Pokemon list: ${error.message}`);
   }
 };
-
 /**
  * Fetch a single Pokemon by name or ID
  * @param {string|number} nameOrId - Pokemon name or ID
@@ -37,7 +36,6 @@ export const getPokemonByNameOrId = async (nameOrId) => {
     throw new Error(`Failed to fetch Pokemon: ${error.message}`);
   }
 };
-
 /**
  * Fetch Pokemon species data (for descriptions)
  * @param {string|number} nameOrId - Pokemon name or ID
@@ -56,7 +54,6 @@ export const getPokemonSpecies = async (nameOrId) => {
     throw new Error(`Failed to fetch Pokemon species: ${error.message}`);
   }
 };
-
 /**
  * Search Pokemon by name
  * @param {string} query - Search query
@@ -84,7 +81,6 @@ export const searchPokemon = async (query, limit = config.pagination.maxSearchLi
     throw new Error(`Failed to search Pokemon: ${error.message}`);
   }
 };
-
 /**
  * Fetch all Pokemon types
  * @returns {Promise<Array>} - List of types
@@ -97,7 +93,6 @@ export const getPokemonTypes = async () => {
     throw new Error(`Failed to fetch Pokemon types: ${error.message}`);
   }
 };
-
 /**
  * Fetch all Pokemon of a specific type
  * @param {string} typeName - Type name (e.g., "electric")
