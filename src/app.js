@@ -7,9 +7,6 @@ import routes from './routes/index.js';
 // ============================================
 // MIDDLEWARE
 // ============================================
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(join(__dirname, '../public')));
 
 // ES Modules don't have __dirname by default — recreate it.
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +15,9 @@ const __dirname = dirname(__filename);
 const app = express();
 const { port: PORT, nodeEnv } = config;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(join(__dirname, '../public')));
 // ============================================
 // VIEW ENGINE
 // ============================================
