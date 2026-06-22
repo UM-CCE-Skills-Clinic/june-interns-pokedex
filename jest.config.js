@@ -3,10 +3,8 @@ export default {
   transform: {},
   moduleFileExtensions: ['js', 'mjs'],
   testMatch: ['**/tests/**/*.test.js'],
-  collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/app.js'
-  ],
+  cacheDirectory: '.jest-cache',
+  collectCoverageFrom: ['src/**/*.js', '!src/app.js'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   verbose: true,
