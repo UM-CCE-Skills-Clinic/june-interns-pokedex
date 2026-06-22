@@ -95,14 +95,14 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           LAST_NAME="${{ steps.extract.outputs.last_name }}"
-          EXPECTED="${LAST_NAME}/my-pokedex-pull-request"
+          EXPECTED="${LAST_NAME}/pokedex-pull-request"
 
           if [ "$PR_TITLE" != "$EXPECTED" ]; then
             echo "ERROR: PR title does not match the required format."
             echo "  Expected : $EXPECTED"
             echo "  Actual   : $PR_TITLE"
             echo ""
-            echo "Please rename your Pull Request to '<Last Name>/my-pokedex-pull-request'."
+            echo "Please rename your Pull Request to '<Last Name>/pokedex-pull-request'."
             exit 1
           fi
 
