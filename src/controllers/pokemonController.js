@@ -1,4 +1,4 @@
-import * as pokemonService from '../services/pokemonService.js';
+import * as pokemonService from '../services/pokemonServices.js';
 
 // ============================================
 // VIEW CONTROLLERS (Return HTML via EJS)
