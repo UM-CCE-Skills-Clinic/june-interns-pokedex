@@ -83,7 +83,80 @@ const formatStatName = (name) => {
     'special-defense': 'Sp. Def',
     speed: 'Speed'
   };
-  return statNames[name] || formatName(name);
+  return statNames[name] || formatName(export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: daconst formatStatName = (name) => {
+  const statNames = {
+    hp: 'HP',
+    attack: 'Attack',
+    defense: 'Defense',
+    'special-attack': 'Sp. Atk',
+    'special-defense': 'Sp. Def',
+    speed: 'Speed'
+  };
+  return statNames[name] || formatName(export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset +export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+}; limit < data.count,
+    hasPrevPage: page > 1
+  };
+};name);ta.count,export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};name);
 };
 ```
 
@@ -104,7 +177,39 @@ This is the heart of the service. It merges the Pokemon data and the (optional) 
 const formatPokemonData = (pokemon, species = null) => {
   const description =
     species?.flavor_text_entries
-      ?.find((entry) => entry.language.name === 'en')
+      ?.find((entry) => enexport const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};try.language.name === 'en')
       ?.flavor_text?.replace(/[\f\n\r]/g, ' ') || 'No description available.';
 
   const genus = species?.genera?.find((g) => g.language.name === 'en')?.genus || 'Unknown';
@@ -144,7 +249,23 @@ const formatPokemonData = (pokemon, species = null) => {
     genus,
     color: species?.color?.name || 'gray',
     captureRate: species?.capture_rate || 0,
-    baseHappiness: species?.base_happiness || 0
+    baseHappiness: spexport const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};ecies?.base_happiness || 0
   };
 };
 ```
@@ -178,7 +299,22 @@ export const getPokemonDetails = async (nameOrId) => {
     // Species data is optional - continue without it.
   }
 
+  export const getPokemonDetails = async (nameOrId) => {
+  const pokemon = await pokemonRepository.getPokemonByNameOrId(nameOrId);
+  if (!pokemon) {
+    return null; // Not found
+  }
+
+  let species = null;
+  try {
+    species = await pokemonRepository.getPokemonSpecies(pokemon.id);
+  } catch {
+    // Species data is optional - continue without it.
+  }
+
   return formatPokemonData(pokemon, species);
+};
+```return formatPokemonData(pokemon, species);
 };
 ```
 
@@ -214,7 +350,22 @@ export const getAllPokemon = async (page = 1, limit = config.pagination.defaultL
 ```
 
 2. Save the file
+export const getPokemonDetails = async (nameOrId) => {
+  const pokemon = await pokemonRepository.getPokemonByNameOrId(nameOrId);
+  if (!pokemon) {
+    return null; // Not found
+  }
 
+  let species = null;
+  try {
+    species = await pokemonRepository.getPokemonSpecies(pokemon.id);
+  } catch {
+    // Species data is optional - continue without it.
+  }
+
+  return formatPokemonData(pokemon, species);
+};
+```
 We `filter((p) => p !== null)` so a single broken entry can never crash the whole page.
 
 ---
@@ -235,7 +386,23 @@ export const searchPokemon = async (query) => {
   const exactMatch = await pokemonRepository.getPokemonByNameOrId(query);
   if (exactMatch) {
     const formatted = await getPokemonDetails(query);
-    return {
+    return {export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
+
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};
       pokemon: formatted ? [formatted] : [],
       totalCount: formatted ? 1 : 0
     };
@@ -336,7 +503,22 @@ const pokemonWithDetails = await Promise.all(
 `Promise.all()` runs multiple async operations in parallel - much faster than sequential!
 
 ### Pagination Formula
+export const getPokemonDetails = async (nameOrId) => {
+  const pokemon = await pokemonRepository.getPokemonByNameOrId(nameOrId);
+  if (!pokemon) {
+    return null; // Not found
+  }
 
+  let species = null;
+  try {
+    species = await pokemonRepository.getPokemonSpecies(pokemon.id);
+  } catch {
+    // Species data is optional - continue without it.
+  }
+
+  return formatPokemonData(pokemon, species);
+};
+```
 ```
 Page 1: Items 1-20   (offset: 0)
 Page 2: Items 21-40  (offset: 20)
