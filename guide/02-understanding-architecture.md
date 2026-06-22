@@ -45,7 +45,7 @@ We're using a **layered architecture** pattern. Think of it like a factory assem
 ```
 
 ---
-
+   
 ## Step 1: Understand Each Layer
 
 ### Routes (`src/routes/`)
