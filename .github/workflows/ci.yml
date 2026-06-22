@@ -1,0 +1,198 @@
+name: Project Submission Pipeline
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+# Cancel superseded runs when new commits are pushed to the same PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  extract-student-info:
+    name: Extract Student Info
+    runs-on: ubuntu-latest
+    # Expose the validated details so the final submission job can use them
+    # as the API request body.
+    outputs:
+      first_name: ${{ steps.extract.outputs.first_name }}
+      last_name: ${{ steps.extract.outputs.last_name }}
+      program: ${{ steps.extract.outputs.program }}
+      student_email: ${{ steps.extract.outputs.student_email }}
+    steps:
+      - name: Extract Student Info from PR Body
+        id: extract
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          FIRST_NAME=$(echo "$PR_BODY" | grep -oP '(?<=First Name: ).*' | tr -d '`\r' | xargs)
+          LAST_NAME=$(echo "$PR_BODY" | grep -oP '(?<=Last Name: ).*' | tr -d '`\r' | xargs)
+          PROGRAM=$(echo "$PR_BODY" | grep -oP '(?<=Program: ).*' | tr -d '`\r' | xargs)
+          EMAIL=$(echo "$PR_BODY" | grep -oP '(?<=UMindanao Email: ).*' | tr -d '`\r' | xargs)
+
+          echo "first_name=$FIRST_NAME" >> $GITHUB_OUTPUT
+          echo "last_name=$LAST_NAME" >> $GITHUB_OUTPUT
+          echo "program=$PROGRAM" >> $GITHUB_OUTPUT
+          echo "student_email=$EMAIL" >> $GITHUB_OUTPUT
+
+      - name: Validate Fields Present
+        run: |
+          FIRST_NAME="${{ steps.extract.outputs.first_name }}"
+          LAST_NAME="${{ steps.extract.outputs.last_name }}"
+          PROGRAM="${{ steps.extract.outputs.program }}"
+          EMAIL="${{ steps.extract.outputs.student_email }}"
+
+          FAILED=0
+
+          if [ -z "$FIRST_NAME" ]; then
+            echo "ERROR: First Name is missing from the PR body."
+            FAILED=1
+          fi
+
+          if [ -z "$LAST_NAME" ]; then
+            echo "ERROR: Last Name is missing from the PR body."
+            FAILED=1
+          fi
+
+          if [ -z "$PROGRAM" ]; then
+            echo "ERROR: Program is missing from the PR body."
+            FAILED=1
+          fi
+
+          if [ -z "$EMAIL" ]; then
+            echo "ERROR: UMindanao Email is missing from the PR body."
+            FAILED=1
+          fi
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "Please update your PR description to include:"
+            echo "  First Name: Your First Name"
+            echo "  Last Name: Your Last Name"
+            echo "  Program: Your Program"
+            echo "  UMindanao Email: f.lastname.123456@umindanao.edu.ph"
+            exit 1
+          fi
+
+      - name: Validate UMindanao Email Format
+        run: |
+          EMAIL="${{ steps.extract.outputs.student_email }}"
+
+          if [[ ! "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@umindanao\.edu\.ph$ ]]; then
+            echo "ERROR: '$EMAIL' is not a valid UMindanao email (@umindanao.edu.ph)."
+            exit 1
+          fi
+
+          echo "All checks passed."
+          echo "  First Name : ${{ steps.extract.outputs.first_name }}"
+          echo "  Last Name  : ${{ steps.extract.outputs.last_name }}"
+          echo "  Program    : ${{ steps.extract.outputs.program }}"
+          echo "  Email      : $EMAIL"
+
+      - name: Validate PR Title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          LAST_NAME="${{ steps.extract.outputs.last_name }}"
+          EXPECTED="${LAST_NAME}/my-pokedex-pull-request"
+
+          if [ "$PR_TITLE" != "$EXPECTED" ]; then
+            echo "ERROR: PR title does not match the required format."
+            echo "  Expected : $EXPECTED"
+            echo "  Actual   : $PR_TITLE"
+            echo ""
+            echo "Please rename your Pull Request to '<Last Name>/my-pokedex-pull-request'."
+            exit 1
+          fi
+
+          echo "PR title matches the required format: $EXPECTED"
+
+  verify:
+    name: Format, Lint, Test & Build
+    runs-on: ubuntu-latest
+    needs: extract-student-info
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test:ci
+        env:
+          NODE_ENV: test
+
+      - name: Verify app starts
+        run: npm run start:ci
+        env:
+          NODE_ENV: production
+          PORT: 3000
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  submit:
+    name: Submit Student Info
+    runs-on: ubuntu-latest
+    # Runs last: only after the student info is valid AND all checks pass.
+    needs: [extract-student-info, verify]
+    steps:
+      - name: Submit student details to API
+        env:
+          FIRST_NAME: ${{ needs.extract-student-info.outputs.first_name }}
+          LAST_NAME: ${{ needs.extract-student-info.outputs.last_name }}
+          PROGRAM: ${{ needs.extract-student-info.outputs.program }}
+          STUDENT_EMAIL: ${{ needs.extract-student-info.outputs.student_email }}
+        run: |
+          echo "All checks passed. Ready to submit the following details:"
+          echo "  First Name : $FIRST_NAME"
+          echo "  Last Name  : $LAST_NAME"
+          echo "  Program    : $PROGRAM"
+          echo "  Email      : $STUDENT_EMAIL"
+          
+          PAYLOAD=$(jq -n \
+            --arg first_name  "$FIRST_NAME" \
+            --arg last_name   "$LAST_NAME" \
+            --arg program     "$PROGRAM" \
+            --arg email       "$STUDENT_EMAIL" \
+            '{first_name: $first_name, last_name: $last_name, program: $program, umindanao_email: $email}')
+
+          echo "Request body:"
+          echo "$PAYLOAD"
+
+          # Capture the response body and HTTP status separately so a 4xx/5xx
+          # still prints the API's error message (which explains the 400).
+          HTTP_STATUS=$(curl --silent --show-error \
+            -o response.txt -w "%{http_code}" \
+            -X POST "${{ secrets.SUBMISSION_API_URL }}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.SUBMISSION_API_TOKEN }}" \
+            -d "$PAYLOAD")
+
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Response body:"
+          cat response.txt
+
+          if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
+            echo "ERROR: submission API returned $HTTP_STATUS"
+            exit 1
+          fi
