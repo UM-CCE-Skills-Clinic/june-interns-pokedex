@@ -18,7 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, '../public')));
 
-
 // ============================================
 // VIEW ENGINE
 // ============================================
@@ -70,7 +69,6 @@ app.use((err, _req, res, _next) => {
     error: err.message
   });
 });
-
 
 // ============================================
 // START SERVER

@@ -142,7 +142,6 @@ export const searchPokemon = async (query) => {
   };
 };
 
-
 /**
  * All selectable types (special types removed), formatted for display.
  */
@@ -184,4 +183,3 @@ export const getPokemonByType = async (
     hasPrevPage: page > 1
   };
 };
-
