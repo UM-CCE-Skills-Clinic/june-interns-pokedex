@@ -1,4 +1,4 @@
-%
+<%
   const primary = pokemon.types[0] || 'normal';
   const c = typeColors[primary] || '#9099a1';
   const idStr = String(pokemon.id).padStart(3, '0');
@@ -15,7 +15,7 @@
   <div class="grid gap-0 lg:grid-cols-[minmax(0,420px)_1fr]">
     <!-- LEFT: hero -->
     <div class="relative flex flex-col items-center justify-center gap-5 p-8 lg:p-10"
-         style="<%= `background: linear-gradient(160deg, ${c} 0%, ${c}cc 55%, ${c}99 100%);` %>">
+         style="background: linear-gradient(160deg, <%= c %> 0%, <%= c %>cc 55%, <%= c %>99 100%);">
       <div class="pointer-events-none absolute inset-0 opacity-30"
            style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.6) 1px, transparent 0); background-size: 22px 22px;"></div>
 
@@ -83,7 +83,7 @@
       <section>
         <div class="flex items-center justify-between">
           <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Base stats</h2>
-          <span class="text-sm font-bold text-slate-900">Total <span class="tabular-nums" style="<%= 'color: ' + c %>"><%= pokemon.totalStats %></span></span>
+          <span class="text-sm font-bold text-slate-900">Total <span class="tabular-nums" style="color: <%= c %>"><%= pokemon.totalStats %></span></span>
         </div>
         <div class="mt-4 space-y-3">
           <% pokemon.stats.forEach((stat) => {
@@ -92,7 +92,7 @@
             <div class="grid grid-cols-[72px_1fr_44px] items-center gap-3">
               <span class="text-xs font-semibold text-slate-500"><%= stat.name %></span>
               <div class="h-2.5 overflow-hidden rounded-full bg-slate-100">
-                <div class="stat-bar h-full rounded-full" style="<%= 'width: 0%; background-color: ' + c + ';' %>" data-width="<%= pct %>"></div>
+                <div class="stat-bar h-full rounded-full" style="width: 0%; background-color: <%= c %>;" data-width="<%= pct %>"></div>
               </div>
               <span class="text-right text-sm font-bold tabular-nums text-slate-900"><%= stat.value %></span>
             </div>

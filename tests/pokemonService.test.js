@@ -1,185 +1,132 @@
-import * as pokemonRepository from 'src/repositories/pokemonRepository.js';
-import { config } from '../config/index.js';
+import { jest } from '@jest/globals';
 
-/**
- * "mr-mime" -> "Mr Mime"
- */
-const formatName = (name) => {
-  return name
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+jest.unstable_mockModule('../src/repositories/pokemonRepository.js', () => ({
+  getAllPokemon: jest.fn(),
+  getPokemonByNameOrId: jest.fn(),
+  getPokemonSpecies: jest.fn(),
+  searchPokemon: jest.fn(),
+  getPokemonTypes: jest.fn(),
+  getPokemonByType: jest.fn()
+}));
+
+const pokemonRepository = await import('../src/repositories/pokemonRepository.js');
+const pokemonService = await import('../src/services/pokemonService.js');
+
+const rawPikachu = {
+  id: 25,
+  name: 'pikachu',
+  sprites: {
+    front_default: 'sprite.png',
+    other: {
+      'official-artwork': {
+        front_default: 'artwork.png'
+      }
+    }
+  },
+  types: [{ type: { name: 'electric' } }],
+  height: 4,
+  weight: 60,
+  abilities: [{ ability: { name: 'static' }, is_hidden: false }],
+  stats: [
+    { base_stat: 35, stat: { name: 'hp' } },
+    { base_stat: 90, stat: { name: 'speed' } }
+  ]
 };
 
-const formatStatName = (name) => {
-  const statNames = {
-    hp: 'HP',
-    attack: 'Attack',
-    defense: 'Defense',
-    'special-attack': 'Sp. Atk',
-    'special-defense': 'Sp. Def',
-    speed: 'Speed'
-  };
-  return statNames[name] || formatName(name);
+const rawSpecies = {
+  flavor_text_entries: [
+    {
+      language: { name: 'en' },
+      flavor_text: 'When several of these Pokemon gather, their electricity builds.'
+    }
+  ],
+  genera: [{ language: { name: 'en' }, genus: 'Mouse Pokemon' }],
+  color: { name: 'yellow' },
+  capture_rate: 190,
+  base_happiness: 50
 };
 
-/**
- * Transform raw PokeAPI data into a display-ready object.
- */
-const formatPokemonData = (pokemon, species = null) => {
-  const description =
-    species?.flavor_text_entries
-      ?.find((entry) => entry.language.name === 'en')
-      ?.flavor_text?.replace(/[\f\n\r]/g, ' ') || 'No description available.';
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-  const genus = species?.genera?.find((g) => g.language.name === 'en')?.genus || 'Unknown';
+describe('pokemonService', () => {
+  test('getPokemonDetails formats repository data for display', async () => {
+    pokemonRepository.getPokemonByNameOrId.mockResolvedValue(rawPikachu);
+    pokemonRepository.getPokemonSpecies.mockResolvedValue(rawSpecies);
 
-  const stats = pokemon.stats.map((s) => ({
-    name: formatStatName(s.stat.name),
-    value: s.base_stat
-  }));
+    const result = await pokemonService.getPokemonDetails('pikachu');
 
-  const totalStats = stats.reduce((sum, s) => sum + s.value, 0);
+    expect(result).toMatchObject({
+      id: 25,
+      name: 'pikachu',
+      displayName: 'Pikachu',
+      image: 'artwork.png',
+      sprite: 'sprite.png',
+      types: ['electric'],
+      height: 0.4,
+      weight: 6,
+      abilities: [{ name: 'Static', isHidden: false }],
+      stats: [
+        { name: 'HP', value: 35 },
+        { name: 'Speed', value: 90 }
+      ],
+      totalStats: 125,
+      description: 'When several of these Pokemon gather, their electricity builds.',
+      genus: 'Mouse Pokemon',
+      color: 'yellow',
+      captureRate: 190,
+      baseHappiness: 50
+    });
+  });
 
-  return {
-    id: pokemon.id,
-    name: pokemon.name,
-    displayName: formatName(pokemon.name),
+  test('getPokemonDetails returns null when the repository cannot find a Pokemon', async () => {
+    pokemonRepository.getPokemonByNameOrId.mockResolvedValue(null);
 
-    image:
-      pokemon.sprites?.other?.['official-artwork']?.front_default ||
-      pokemon.sprites?.front_default ||
-      '',
-    sprite: pokemon.sprites?.front_default || '',
+    await expect(pokemonService.getPokemonDetails('missingno')).resolves.toBeNull();
+    expect(pokemonRepository.getPokemonSpecies).not.toHaveBeenCalled();
+  });
 
-    types: pokemon.types.map((t) => t.type.name),
+  test('getAllPokemon returns pagination metadata and filters missing details', async () => {
+    pokemonRepository.getAllPokemon.mockResolvedValue({
+      count: 2,
+      results: [{ name: 'pikachu' }, { name: 'missingno' }]
+    });
+    pokemonRepository.getPokemonByNameOrId
+      .mockResolvedValueOnce(rawPikachu)
+      .mockResolvedValueOnce(null);
+    pokemonRepository.getPokemonSpecies.mockResolvedValue(rawSpecies);
 
-    height: pokemon.height / 10, // decimeters -> meters
-    weight: pokemon.weight / 10, // hectograms -> kilograms
+    const result = await pokemonService.getAllPokemon(1, 2);
 
-    abilities: pokemon.abilities.map((a) => ({
-      name: formatName(a.ability.name),
-      isHidden: a.is_hidden
-    })),
+    expect(pokemonRepository.getAllPokemon).toHaveBeenCalledWith(2, 0);
+    expect(result.pokemon).toHaveLength(1);
+    expect(result.totalCount).toBe(2);
+    expect(result.currentPage).toBe(1);
+    expect(result.totalPages).toBe(1);
+    expect(result.hasNextPage).toBe(false);
+    expect(result.hasPrevPage).toBe(false);
+  });
 
-    stats,
-    totalStats,
+  test('searchPokemon returns an empty result for blank queries', async () => {
+    await expect(pokemonService.searchPokemon('   ')).resolves.toEqual({
+      pokemon: [],
+      totalCount: 0
+    });
+    expect(pokemonRepository.getPokemonByNameOrId).not.toHaveBeenCalled();
+  });
 
-    description,
-    genus,
-    color: species?.color?.name || 'gray',
-    captureRate: species?.capture_rate || 0,
-    baseHappiness: species?.base_happiness || 0
-  };
-};
+  test('getPokemonTypes removes special types and formats display names', async () => {
+    pokemonRepository.getPokemonTypes.mockResolvedValue([
+      { name: 'electric' },
+      { name: 'unknown' },
+      { name: 'shadow' },
+      { name: 'special-attack' }
+    ]);
 
-/**
- * Get a single, fully-formatted Pokemon. Returns null if not found.
- */
-export const getPokemonDetails = async (nameOrId) => {
-  const pokemon = await pokemonRepository.getPokemonByNameOrId(nameOrId);
-  if (!pokemon) {
-    return null; // Not found
-  }
-
-  let species = null;
-  try {
-    species = await pokemonRepository.getPokemonSpecies(pokemon.id);
-  } catch {
-    // Species data is optional - continue without it.
-  }
-
-  return formatPokemonData(pokemon, species);
-};
-
-/**
- * Paginated list of Pokemon with full details for each entry.
- */
-export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
-  const offset = (page - 1) * limit;
-  const data = await pokemonRepository.getAllPokemon(limit, offset);
-
-  const pokemonWithDetails = await Promise.all(
-    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
-  );
-
-  return {
-    pokemon: pokemonWithDetails.filter((p) => p !== null),
-    totalCount: data.count,
-    currentPage: page,
-    totalPages: Math.ceil(data.count / limit),
-    hasNextPage: offset + limit < data.count,
-    hasPrevPage: page > 1
-  };
-};
-
-/**
- * Search by name. Tries an exact match first, then a partial-name search.
- */
-export const searchPokemon = async (query) => {
-  if (!query || query.trim().length === 0) {
-    return { pokemon: [], totalCount: 0 };
-  }
-
-  const exactMatch = await pokemonRepository.getPokemonByNameOrId(query);
-  if (exactMatch) {
-    const formatted = await getPokemonDetails(query);
-    return {
-      pokemon: formatted ? [formatted] : [],
-      totalCount: formatted ? 1 : 0
-    };
-  }
-
-  const searchResults = await pokemonRepository.searchPokemon(query);
-
-  const pokemonWithDetails = await Promise.all(
-    searchResults.results.slice(0, 20).map((pokemon) => getPokemonDetails(pokemon.name))
-  );
-
-  return {
-    pokemon: pokemonWithDetails.filter((p) => p !== null),
-    totalCount: searchResults.count
-  };
-};
-
-/**
- * All selectable types (special types removed), formatted for display.
- */
-export const getPokemonTypes = async () => {
-  const types = await pokemonRepository.getPokemonTypes();
-
-  return types
-    .filter((t) => t.name !== 'unknown' && t.name !== 'shadow')
-    .map((t) => ({ name: t.name, displayName: formatName(t.name) }));
-};
-
-/**
- * Paginated list of Pokemon for a given type. Returns null if type not found.
- */
-export const getPokemonByType = async (
-  typeName,
-  page = 1,
-  limit = config.pagination.defaultLimit
-) => {
-  const pokemonList = await pokemonRepository.getPokemonByType(typeName);
-  if (!pokemonList) {
-    return null; // Type not found
-  }
-
-  const offset = (page - 1) * limit;
-  const paginatedList = pokemonList.slice(offset, offset + limit);
-
-  const pokemonWithDetails = await Promise.all(
-    paginatedList.map((pokemon) => getPokemonDetails(pokemon.name))
-  );
-
-  return {
-    pokemon: pokemonWithDetails.filter((p) => p !== null),
-    type: typeName,
-    totalCount: pokemonList.length,
-    currentPage: page,
-    totalPages: Math.ceil(pokemonList.length / limit),
-    hasNextPage: offset + limit < pokemonList.length,
-    hasPrevPage: page > 1
-  };
-};
+    await expect(pokemonService.getPokemonTypes()).resolves.toEqual([
+      { name: 'electric', displayName: 'Electric' },
+      { name: 'special-attack', displayName: 'Special Attack' }
+    ]);
+  });
+});

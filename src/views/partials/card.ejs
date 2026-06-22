@@ -8,7 +8,7 @@
 >
   <!-- Type-tinted image stage -->
   <div class="relative isolate flex h-40 items-center justify-center overflow-hidden"
-       style="<%= `background: radial-gradient(120% 120% at 50% 0%, ${c}33 0%, ${c}14 45%, transparent 70%);` %>">
+       style="background: radial-gradient(120% 120% at 50% 0%, <%= c %>33 0%, <%= c %>14 45%, transparent 70%);">
     <span class="absolute -right-6 -top-6 select-none text-[7rem] font-black leading-none text-slate-900/[0.04]">
       <%= String(poke.id).padStart(3, '0') %>
     </span>
@@ -26,12 +26,10 @@
   <div class="flex flex-1 flex-col gap-2.5 p-4">
     <h3 class="text-base font-bold tracking-tight text-slate-900"><%= poke.displayName %></h3>
     <div class="flex flex-wrap gap-1.5">
-      <% poke.types.forEach((type) => {
-           const badgeColor = typeColors[type] || '#9099a1';
-         %>
+      <% poke.types.forEach((type) => { %>
         <span
           class="inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm"
-          style="<%= 'background-color: ' + badgeColor + ';' %>"
+          style="background-color: <%= typeColors[type] || '#9099a1' %>;"
         ><%= type %></span>
       <% }); %>
     </div>

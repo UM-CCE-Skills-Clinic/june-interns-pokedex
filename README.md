@@ -16,20 +16,20 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 >
 > This is the heart of the project. The guide walks you through building the **entire** app from an empty folder to a finished, tested application — in order, with nothing skipped.
 
-| Part | Topic | Link |
-|------|-------|------|
-| 00 | Introduction | [Read](guide/00-introduction.md) |
-| 01 | Project Setup | [Read](guide/01-project-setup.md) |
-| 02 | Understanding Architecture | [Read](guide/02-understanding-architecture.md) |
-| 03 | Configuration | [Read](guide/03-configuration.md) |
-| 04 | Building the Repository | [Read](guide/04-building-the-repository.md) |
-| 05 | Building the Service | [Read](guide/05-building-the-service.md) |
-| 06 | Building the Controller | [Read](guide/06-building-the-controller.md) |
-| 07 | Building the Routes | [Read](guide/07-building-the-routes.md) |
-| 08 | Building the Views | [Read](guide/08-building-the-views.md) |
-| 09 | App Entry Point | [Read](guide/09-building-the-app.md) |
-| 10 | Testing | [Read](guide/10-testing.md) |
-| 11 | Running the App | [Read](guide/11-running-the-app.md) |
+| Part | Topic                      | Link                                           |
+| ---- | -------------------------- | ---------------------------------------------- |
+| 00   | Introduction               | [Read](guide/00-introduction.md)               |
+| 01   | Project Setup              | [Read](guide/01-project-setup.md)              |
+| 02   | Understanding Architecture | [Read](guide/02-understanding-architecture.md) |
+| 03   | Configuration              | [Read](guide/03-configuration.md)              |
+| 04   | Building the Repository    | [Read](guide/04-building-the-repository.md)    |
+| 05   | Building the Service       | [Read](guide/05-building-the-service.md)       |
+| 06   | Building the Controller    | [Read](guide/06-building-the-controller.md)    |
+| 07   | Building the Routes        | [Read](guide/07-building-the-routes.md)        |
+| 08   | Building the Views         | [Read](guide/08-building-the-views.md)         |
+| 09   | App Entry Point            | [Read](guide/09-building-the-app.md)           |
+| 10   | Testing                    | [Read](guide/10-testing.md)                    |
+| 11   | Running the App            | [Read](guide/11-running-the-app.md)            |
 
 > ℹ️ **No `src/` folder?** That's intentional. You'll create every file in `src/` as you work through Parts 01–11. By the end you'll have a complete, running Pokedex.
 
@@ -46,15 +46,15 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| **Node.js** | JavaScript runtime |
-| **Express.js** | Web framework |
-| **EJS** | Template engine |
+| Technology             | Purpose                               |
+| ---------------------- | ------------------------------------- |
+| **Node.js**            | JavaScript runtime                    |
+| **Express.js**         | Web framework                         |
+| **EJS**                | Template engine                       |
 | **Tailwind CSS (CDN)** | Utility-first styling — no build step |
-| **Axios** | HTTP client |
-| **PokeAPI** | Pokemon data source |
-| **Jest + Supertest** | Testing framework |
+| **Axios**              | HTTP client                           |
+| **PokeAPI**            | Pokemon data source                   |
+| **Jest + Supertest**   | Testing framework                     |
 
 ---
 
@@ -68,17 +68,20 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 ### Set up your workspace
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/interns-pokedex.git
    cd interns-pokedex
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    ```
@@ -93,15 +96,15 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 
 > These become available as you build the app in the guide.
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start the production server |
-| `npm run dev` | Start development server with hot reload |
-| `npm test` | Run tests with coverage |
-| `npm run lint` | Check code for linting errors |
-| `npm run lint:fix` | Fix linting errors automatically |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
+| Command                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `npm start`            | Start the production server              |
+| `npm run dev`          | Start development server with hot reload |
+| `npm test`             | Run tests with coverage                  |
+| `npm run lint`         | Check code for linting errors            |
+| `npm run lint:fix`     | Fix linting errors automatically         |
+| `npm run format`       | Format code with Prettier                |
+| `npm run format:check` | Check code formatting                    |
 
 ---
 
@@ -137,6 +140,7 @@ npm test
 ```
 
 The tests cover:
+
 - API endpoints (`tests/api.test.js`)
 - Service layer (`tests/pokemonService.test.js`)
 
