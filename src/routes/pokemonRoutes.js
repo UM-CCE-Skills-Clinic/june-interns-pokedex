@@ -39,31 +39,3 @@ router.get('/api/types', pokemonController.apiGetTypes);
 router.get('/api/types/:type', pokemonController.apiGetPokemonByType);
 
 export default router;
-
-
-const router = Router();
-
-// View routes (EJS)
-router.get('/', pokemonController.getHomePage);
-router.get('/search', pokemonController.searchPokemon);
-router.get('/type/:type', pokemonController.getPokemonByType);
-router.get('/pokemon/:nameOrId', pokemonController.getPokemonDetails);
-
-// API routes (JSON)
-router.get('/api/pokemon', pokemonController.apiGetAllPokemon);
-router.get('/api/pokemon/search', pokemonController.apiSearchPokemon);
-router.get('/api/pokemon/:nameOrId', pokemonController.apiGetPokemonDetails);
-router.get('/api/types', pokemonController.apiGetTypes);
-router.get('/api/types/:type', pokemonController.apiGetPokemonByType);
-
-export default router;
-
-import pokemonRoutes from './pokemonRoutes.js';
-
-const router = Router();
-
-// Mount all Pokemon routes at root
-router.use('/', pokemonRoutes);
-
-export default router;
-
