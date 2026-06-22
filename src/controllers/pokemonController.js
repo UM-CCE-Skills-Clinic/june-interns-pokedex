@@ -1,6 +1,5 @@
 import * as pokemonService from '../services/pokemonService.js';
 
-
 // ============================================
 // VIEW CONTROLLERS (Return HTML via EJS)
 // ============================================
