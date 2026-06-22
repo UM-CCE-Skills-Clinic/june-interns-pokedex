@@ -5,13 +5,6 @@ import { config } from './config/index.js';
 import routes from './routes/index.js';
 
 
-// ============================================
-// VIEW ENGINE
-// ============================================
-app.set('view engine', 'ejs');
-app.set('views', join(__dirname, 'views'));
-
-
 // ES Modules don't have __dirname by default — recreate it.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +12,11 @@ const __dirname = dirname(__filename);
 const app = express();
 const { port: PORT, nodeEnv } = config;
 
+// ============================================
+// VIEW ENGINE
+// ============================================
+app.set('view engine', 'ejs');
+app.set('views', join(__dirname, 'views'));
 
 // ============================================
 // MIDDLEWARE
