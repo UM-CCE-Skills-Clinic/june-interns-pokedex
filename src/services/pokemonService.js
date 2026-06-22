@@ -73,7 +73,6 @@ const formatPokemonData = (pokemon, species = null) => {
   };
 };
 
-
 /**
  * Get a single, fully-formatted Pokemon. Returns null if not found.
  */
@@ -92,7 +91,6 @@ export const getPokemonDetails = async (nameOrId) => {
 
   return formatPokemonData(pokemon, species);
 };
-
 
 /**
  * Paginated list of Pokemon with full details for each entry.
@@ -114,7 +112,6 @@ export const getAllPokemon = async (page = 1, limit = config.pagination.defaultL
     hasPrevPage: page > 1
   };
 };
-
 
 /**
  * Search by name. Tries an exact match first, then a partial-name search.
@@ -185,5 +182,3 @@ export const getPokemonByType = async (
     hasPrevPage: page > 1
   };
 };
-
-
