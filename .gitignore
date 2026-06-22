@@ -18,7 +18,15 @@ coverage/
 dist/
 build/
 
-
+# Project files intentionally ignored
+.env.example
+.prettierrc
+docs/
+eslint.config.js
+jest.config.js
+package.json
+package-lock.json
+tests/
 
 # IDE / Editor
 .idea/
