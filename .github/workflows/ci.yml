@@ -228,7 +228,8 @@ jobs:
           # still prints the API's error message (which explains the 400).
           HTTP_STATUS=$(curl --silent --show-error \
             -o response.txt -w "%{http_code}" \
-            -X POST "${{ secrets.SUBMISSION_API_URL }}" \
+            --url "${{ secrets.SUBMISSION_API_URL }}" \
+            -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.SUBMISSION_API_TOKEN }}" \
             -d "$PAYLOAD")
