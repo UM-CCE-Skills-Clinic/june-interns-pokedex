@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {config} from '../config/index.js';
+import { config } from '../config/index.js';
 
-const {baseUrl: BASE_URL} = config.pokeapi;
+const { baseUrl: BASE_URL } = config.pokeapi;
 
 /**
  * Fetch a paginated list of all Pokemon
@@ -27,9 +27,7 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
  */
 export const getPokemonByNameOrId = async (nameOrId) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`);
     return response.data;
   } catch (error) {
     // Return null for 404 (not found) instead of throwing
