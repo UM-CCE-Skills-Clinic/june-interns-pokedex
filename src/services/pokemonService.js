@@ -85,7 +85,7 @@ export const getPokemonDetails = async (nameOrId) => {
   let species = null;
   try {
     species = await pokemonRepository.getPokemonSpecies(nameOrId);
-  } catch (error) {
+  } catch {
     species = null;
   }
 

@@ -80,7 +80,9 @@ if (nodeEnv !== 'test') {
 
   server.on('error', (error) => {
     if (error.code === 'EADDRINUSE') {
-      console.error(`Port ${PORT} is already in use. Stop the process using that port or set a different PORT environment variable.`);
+      console.error(
+        `Port ${PORT} is already in use. Stop the process using that port or set a different PORT environment variable.`
+      );
       process.exit(1);
     }
 
