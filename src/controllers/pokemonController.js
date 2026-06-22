@@ -56,7 +56,6 @@ export const getPokemonDetails = async (req, res) => {
   }
 };
 
-
 /**
  * Search results page
  */
