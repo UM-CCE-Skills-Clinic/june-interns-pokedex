@@ -28,17 +28,15 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
  */
 
 export const getPokemonByNameOrId = async (nameOrId) => {
-    try {
-        const response = await axios.get(
-            `${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`
-        );
-        return response.data;
-    } catch(error) {
-        if (error.response && error.response.status === 404){
-            return null;
-        }
-        throw new Error(`Failed to fetch Pokemon: ${error.message}`);
+  try {
+    const response = await axios.get(`${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null;
     }
+    throw new Error(`Failed to fetch Pokemon: ${error.message}`);
+  }
 };
 
 /**
@@ -48,17 +46,15 @@ export const getPokemonByNameOrId = async (nameOrId) => {
  */
 
 export const getPokemonSpecies = async (nameOrId) => {
-    try {
-        const response = await get(
-          `${BASE_URL}/pokemon-species/${nameOrId.toString().toLowerCase()}`  
-        );
-        return response;
-    } catch (error) {
-        if (error.response && error.response.status === 404){
-            return null;
-        }
-        throw new Error(`Failed to fetch Pokemon Species: ${error.message}`);
+  try {
+    const response = await get(`${BASE_URL}/pokemon-species/${nameOrId.toString().toLowerCase()}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null;
     }
+    throw new Error(`Failed to fetch Pokemon Species: ${error.message}`);
+  }
 };
 
 /**
@@ -69,24 +65,24 @@ export const getPokemonSpecies = async (nameOrId) => {
  */
 
 export const searchPokemon = async (query, limit = config.pagination.maxSearchLimit) => {
-    try {
-        // Fetch All Pokemon within the list limts
-        const response = await axios.get(`${BASE_URL}/pokemon`, {
-            params: {limit, offset: 0}
-        });
+  try {
+    // Fetch All Pokemon within the list limts
+    const response = await axios.get(`${BASE_URL}/pokemon`, {
+      params: { limit, offset: 0 }
+    });
 
-        const allPokemon = response.data.results;
-        const filtered = allPokemon.filter((pokemon) => 
-            pokemon.name.toLowerCase().includes(query.toLowerCase())
-        );
+    const allPokemon = response.data.results;
+    const filtered = allPokemon.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(query.toLowerCase())
+    );
 
-            return {
-            count: filtered.length,
-            results: filtered
-            };
-     } catch (error) {
-            throw new Error(`Failed to search Pokemon: ${error.message}`);
-        }
+    return {
+      count: filtered.length,
+      results: filtered
+    };
+  } catch (error) {
+    throw new Error(`Failed to search Pokemon: ${error.message}`);
+  }
 };
 
 /**

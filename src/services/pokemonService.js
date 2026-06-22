@@ -71,7 +71,7 @@ const formatPokemonData = (pokemon, species = null) => {
     captureRate: species?.capture_rate || 0,
     baseHappiness: species?.base_happiness || 0
   };
-};  
+};
 
 /**
  * Get a single, fully-formatted Pokemon. Returns null if not found.
