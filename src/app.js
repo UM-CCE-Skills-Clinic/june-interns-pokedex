@@ -71,6 +71,23 @@ app.use((err, _req, res, _next) => {
 });
 
 // ============================================
+// ERROR HANDLERS
+// ============================================
+app.use((req, res) => {
+  res.status(404).render('error', {
+    message: 'Page not found',
+    error: 'The page you are looking for does not exist.'
+  });
+});
+
+app.use((err, _req, res, _next) => {
+  res.status(500).render('error', {
+    message: 'Something went wrong',
+    error: err.message
+  });
+});
+
+// ============================================
 // START SERVER
 // ============================================
 if (nodeEnv !== 'test') {
