@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const { port: PORT, nodeEnv } = config; 
+const { port: PORT, nodeEnv } = config;
 
 // ============================================
 // MIDDLEWARE
@@ -52,7 +52,6 @@ app.locals.typeColors = {
 // ROUTES
 // ============================================
 app.use('/', routes);
-
 // ============================================
 // ERROR HANDLERS
 // ============================================
@@ -80,4 +79,3 @@ if (nodeEnv !== 'test') {
 }
 
 export default app;
-
