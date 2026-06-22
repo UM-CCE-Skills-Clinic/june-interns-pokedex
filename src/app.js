@@ -56,7 +56,7 @@ app.use('/', routes);
 // ============================================
 // 404 HANDLER
 // ============================================
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).render('error', {
     message: 'Page not found',
     error: `Cannot GET ${req.originalUrl}`
