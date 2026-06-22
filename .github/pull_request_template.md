@@ -6,10 +6,10 @@
   after the colon. Your email must end in @umindanao.edu.ph.
 -->
 
-First Name: 
-Last Name: 
-Program: 
-UMindanao Email: 
+First Name: Ryan Jay
+Last Name: Compuesto
+Program: BSCS
+UMindanao Email: r.compuesto.545237@umindanao.edu.ph
 
 
 ## Summary

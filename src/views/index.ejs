@@ -1,0 +1,80 @@
+<%- include('partials/header') %>
+
+<section class="mb-12">
+  <div class="mb-8">
+    <h1 class="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+      Discover every Pokémon
+    </h1>
+    <p class="mt-4 text-lg text-slate-600">
+      Browse through our complete Pokédex of Pokémon with detailed stats and information.
+    </p>
+  </div>
+
+  <% if (typeof selectedType !== 'undefined' && selectedType) { %>
+    <div class="mb-6 flex items-center gap-2">
+      <span class="text-slate-600">Filtered by type:</span>
+      <span class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1.5 text-sm font-semibold text-brand-700">
+        <%= selectedType %>
+        <a href="/" class="ml-2 inline-block hover:text-brand-900">×</a>
+      </span>
+    </div>
+  <% } %>
+
+  <% if (pokemon && pokemon.length > 0) { %>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <% pokemon.forEach((poke) => { %>
+        <%- include('partials/card', { poke }) %>
+      <% }); %>
+    </div>
+
+    <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+      <div class="mt-12 flex items-center justify-center gap-2">
+        <% if (hasPrevPage) { %>
+          <a
+            href="/?page=<%= currentPage - 1 %>"
+            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+          >
+            ← Previous
+          </a>
+        <% } %>
+
+        <div class="flex items-center gap-1">
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+              <span class="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-brand-500 text-sm font-semibold text-white">
+                <%= i %>
+              </span>
+            <% } else if (i <= 3 || i > totalPages - 3 || Math.abs(i - currentPage) <= 1) { %>
+              <a
+                href="/?page=<%= i %>"
+                class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-slate-200 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+              >
+                <%= i %>
+              </a>
+            <% } else if (i === 4 || i === totalPages - 3) { %>
+              <span class="px-2">…</span>
+            <% } %>
+          <% } %>
+        </div>
+
+        <% if (hasNextPage) { %>
+          <a
+            href="/?page=<%= currentPage + 1 %>"
+            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+          >
+            Next →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+  <% } else { %>
+    <div class="rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="mt-4 text-slate-600">No Pokémon found matching your search.</p>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
