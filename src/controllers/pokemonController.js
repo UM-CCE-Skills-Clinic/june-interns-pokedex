@@ -32,7 +32,6 @@ export const getHomePage = async (req, res) => {
   }
 };
 
-
 /**
  * Pokemon detail page
  */
