@@ -1,0 +1,122 @@
+<%- include('partials/header') %>
+
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+  <!-- Left column: Image and basic info -->
+  <div class="lg:col-span-1">
+    <div class="sticky top-24 rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+      <div class="mb-6 flex flex-col items-center">
+        <div class="relative mb-4 h-48 w-48 flex items-center justify-center rounded-xl bg-gradient-to-br from-slate-100 to-slate-200">
+          <% 
+            const primary = pokemon.types[0] || 'normal';
+            const c = typeColors[primary] || '#9099a1';
+          %>
+          <div class="absolute inset-0 rounded-xl opacity-10" style="background: linear-gradient(135deg, <%= c %>, transparent);"></div>
+          <img
+            src="<%= pokemon.image || pokemon.sprite %>"
+            alt="<%= pokemon.displayName %>"
+            class="relative h-40 w-40 object-contain"
+          />
+        </div>
+        <h1 class="text-3xl font-black text-slate-900"><%= pokemon.displayName %></h1>
+        <p class="text-slate-500">#<%= String(pokemon.id).padStart(3, '0') %></p>
+      </div>
+
+      <div class="mb-6 space-y-2">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-slate-600">Height</span>
+          <span class="font-semibold text-slate-900"><%= pokemon.height %>m</span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-slate-600">Weight</span>
+          <span class="font-semibold text-slate-900"><%= pokemon.weight %>kg</span>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <p class="mb-2 text-sm font-semibold text-slate-900">Types</p>
+        <div class="flex flex-wrap gap-2">
+          <% pokemon.types.forEach((type) => { %>
+            <span
+              class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase text-white"
+              style="background-color: <%= typeColors[type] || '#9099a1' %>;"
+            ><%= type %></span>
+          <% }); %>
+        </div>
+      </div>
+
+      <a
+        href="/"
+        class="block w-full rounded-lg bg-brand-500 px-4 py-2.5 text-center font-semibold text-white transition hover:bg-brand-600"
+      >
+        Back to Pokédex
+      </a>
+    </div>
+  </div>
+
+  <!-- Right column: Stats and details -->
+  <div class="lg:col-span-2 space-y-6">
+    <!-- Description -->
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+      <h2 class="text-lg font-bold text-slate-900">Pokédex Entry</h2>
+      <p class="mt-3 text-slate-600"><%= pokemon.description %></p>
+      <div class="mt-4 pt-4 border-t border-slate-200 space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-slate-600">Genus</span>
+          <span class="font-semibold text-slate-900"><%= pokemon.genus %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-600">Capture Rate</span>
+          <span class="font-semibold text-slate-900"><%= pokemon.captureRate %>%</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-600">Base Happiness</span>
+          <span class="font-semibold text-slate-900"><%= pokemon.baseHappiness %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Base stats -->
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+      <h2 class="mb-4 text-lg font-bold text-slate-900">Base stats</h2>
+      <div class="space-y-4">
+        <% pokemon.stats.forEach((stat) => { %>
+          <div>
+            <div class="mb-1 flex items-center justify-between text-sm">
+              <span class="font-semibold text-slate-900"><%= stat.name %></span>
+              <span class="text-slate-600"><%= stat.value %></span>
+            </div>
+            <div class="h-2 w-full rounded-full bg-slate-200">
+              <div
+                class="stat-bar h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-600"
+                style="width: <%= (stat.value / 255) * 100 %>%;"
+              ></div>
+            </div>
+          </div>
+        <% }); %>
+        <div class="border-t border-slate-200 pt-4">
+          <div class="flex items-center justify-between text-sm font-semibold">
+            <span class="text-slate-900">Total</span>
+            <span class="text-lg text-brand-600"><%= pokemon.totalStats %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abilities -->
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+      <h2 class="mb-4 text-lg font-bold text-slate-900">Abilities</h2>
+      <div class="space-y-2">
+        <% pokemon.abilities.forEach((ability) => { %>
+          <div class="flex items-center justify-between rounded-lg bg-slate-50 p-3">
+            <span class="font-semibold text-slate-900"><%= ability.name %></span>
+            <% if (ability.isHidden) { %>
+              <span class="text-xs font-semibold uppercase text-brand-600">Hidden</span>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

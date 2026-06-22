@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+<div class="flex flex-col items-center justify-center py-16">
+  <div class="w-full max-w-md text-center">
+    <div class="mb-6">
+      <svg class="mx-auto h-20 w-20 text-brand-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4v2m-6.364.5l1.414-1.414m8.536-8.536l1.414-1.414m0 11.656l-1.414 1.414m-8.536-8.536l-1.414 1.414M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </div>
+    
+    <h1 class="mb-2 text-4xl font-black text-slate-900">Oops!</h1>
+    <p class="mb-6 text-xl font-semibold text-slate-700"><%= message %></p>
+    
+    <% if (error && typeof error === 'string') { %>
+      <p class="mb-8 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
+        <%= error %>
+      </p>
+    <% } %>
+    
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 font-semibold text-white transition hover:bg-brand-600"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Pokédex
+    </a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
