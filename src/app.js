@@ -74,8 +74,17 @@ app.use((err, _req, res, _next) => {
 // START SERVER
 // ============================================
 if (nodeEnv !== 'test') {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Pokedex server running at http://localhost:${PORT}`);
+  });
+
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use. Stop the process using that port or set a different PORT environment variable.`);
+      process.exit(1);
+    }
+
+    throw error;
   });
 }
 
