@@ -20,6 +20,7 @@ build/
 
 # Project files intentionally ignored
 .env.example
+.github/
 .prettierrc
 docs/
 eslint.config.js

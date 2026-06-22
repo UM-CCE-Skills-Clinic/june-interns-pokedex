@@ -1,157 +1,343 @@
 import { jest } from '@jest/globals';
 import request from 'supertest';
 
-// Run in test mode so app.js does not start a listening server.
-process.env.NODE_ENV = 'test';
-
-// Mock the service layer so routes/controllers are tested without network calls.
-jest.unstable_mockModule('../src/services/pokemonService.js', () => ({
+// Mock the pokemon service
+const mockPokemonService = {
   getAllPokemon: jest.fn(),
   getPokemonDetails: jest.fn(),
   searchPokemon: jest.fn(),
   getPokemonTypes: jest.fn(),
   getPokemonByType: jest.fn()
-}));
+};
 
-const service = await import('../src/services/pokemonService.js');
+jest.unstable_mockModule('../src/services/pokemonService.js', () => mockPokemonService);
+
+// Import app after mocking
 const { default: app } = await import('../src/app.js');
 
-const samplePokemon = {
-  id: 25,
-  name: 'pikachu',
-  displayName: 'Pikachu',
-  image: 'artwork.png',
-  sprite: 'sprite.png',
-  types: ['electric'],
-  height: 0.4,
-  weight: 6,
-  abilities: [{ name: 'Static', isHidden: false }],
-  stats: [
-    { name: 'HP', value: 35 },
-    { name: 'Speed', value: 90 }
-  ],
-  totalStats: 125,
-  description: 'An electric mouse.',
-  genus: 'Mouse Pokémon',
-  captureRate: 190,
-  baseHappiness: 50
-};
+describe('Pokemon API Endpoints', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-const emptyListing = {
-  pokemon: [],
-  totalCount: 0,
-  currentPage: 1,
-  totalPages: 1,
-  hasNextPage: false,
-  hasPrevPage: false
-};
+  describe('GET /api/pokemon', () => {
+    it('should return pokemon list with pagination', async () => {
+      const mockData = {
+        pokemon: [
+          { id: 1, name: 'bulbasaur', displayName: 'Bulbasaur', types: ['grass', 'poison'] }
+        ],
+        totalCount: 1000,
+        currentPage: 1,
+        totalPages: 50,
+        hasNextPage: true,
+        hasPrevPage: false
+      };
+      mockPokemonService.getAllPokemon.mockResolvedValue(mockData);
 
-beforeEach(() => {
-  jest.clearAllMocks();
+      const response = await request(app).get('/api/pokemon');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.pokemon).toHaveLength(1);
+      expect(response.body.data.currentPage).toBe(1);
+    });
+
+    it('should accept page and limit query params', async () => {
+      const mockData = {
+        pokemon: [],
+        totalCount: 1000,
+        currentPage: 2,
+        totalPages: 100,
+        hasNextPage: true,
+        hasPrevPage: true
+      };
+      mockPokemonService.getAllPokemon.mockResolvedValue(mockData);
+
+      const response = await request(app).get('/api/pokemon?page=2&limit=10');
+
+      expect(response.status).toBe(200);
+      expect(mockPokemonService.getAllPokemon).toHaveBeenCalledWith(2, 10);
+    });
+
+    it('should return 500 on service error', async () => {
+      mockPokemonService.getAllPokemon.mockRejectedValue(new Error('Service error'));
+
+      const response = await request(app).get('/api/pokemon');
+
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBeDefined();
+    });
+  });
+
+  describe('GET /api/pokemon/:nameOrId', () => {
+    it('should return pokemon details by name', async () => {
+      const mockPokemon = {
+        id: 25,
+        name: 'pikachu',
+        displayName: 'Pikachu',
+        types: ['electric'],
+        stats: []
+      };
+      mockPokemonService.getPokemonDetails.mockResolvedValue(mockPokemon);
+
+      const response = await request(app).get('/api/pokemon/pikachu');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.name).toBe('pikachu');
+    });
+
+    it('should return pokemon details by id', async () => {
+      const mockPokemon = {
+        id: 25,
+        name: 'pikachu',
+        displayName: 'Pikachu',
+        types: ['electric']
+      };
+      mockPokemonService.getPokemonDetails.mockResolvedValue(mockPokemon);
+
+      const response = await request(app).get('/api/pokemon/25');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.id).toBe(25);
+    });
+
+    it('should return 404 for non-existent pokemon', async () => {
+      mockPokemonService.getPokemonDetails.mockResolvedValue(null);
+
+      const response = await request(app).get('/api/pokemon/nonexistent');
+
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should return 500 on service error', async () => {
+      mockPokemonService.getPokemonDetails.mockRejectedValue(new Error('Service error'));
+
+      const response = await request(app).get('/api/pokemon/pikachu');
+
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('GET /api/pokemon/search', () => {
+    it('should search pokemon by query', async () => {
+      const mockData = {
+        pokemon: [{ id: 25, name: 'pikachu', displayName: 'Pikachu', types: ['electric'] }],
+        totalCount: 1
+      };
+      mockPokemonService.searchPokemon.mockResolvedValue(mockData);
+
+      const response = await request(app).get('/api/pokemon/search?q=pika');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.pokemon).toHaveLength(1);
+      expect(mockPokemonService.searchPokemon).toHaveBeenCalledWith('pika');
+    });
+
+    it('should return empty results for no matches', async () => {
+      mockPokemonService.searchPokemon.mockResolvedValue({
+        pokemon: [],
+        totalCount: 0
+      });
+
+      const response = await request(app).get('/api/pokemon/search?q=xyz123');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.pokemon).toHaveLength(0);
+    });
+
+    it('should handle missing query parameter', async () => {
+      mockPokemonService.searchPokemon.mockResolvedValue({
+        pokemon: [],
+        totalCount: 0
+      });
+
+      const response = await request(app).get('/api/pokemon/search');
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe('GET /api/types', () => {
+    it('should return all pokemon types', async () => {
+      const mockTypes = [
+        { name: 'fire', displayName: 'Fire' },
+        { name: 'water', displayName: 'Water' },
+        { name: 'grass', displayName: 'Grass' }
+      ];
+      mockPokemonService.getPokemonTypes.mockResolvedValue(mockTypes);
+
+      const response = await request(app).get('/api/types');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toHaveLength(3);
+    });
+
+    it('should return 500 on service error', async () => {
+      mockPokemonService.getPokemonTypes.mockRejectedValue(new Error('Service error'));
+
+      const response = await request(app).get('/api/types');
+
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('GET /api/types/:type', () => {
+    it('should return pokemon by type', async () => {
+      const mockData = {
+        pokemon: [{ id: 4, name: 'charmander', displayName: 'Charmander', types: ['fire'] }],
+        type: 'fire',
+        totalCount: 100,
+        currentPage: 1,
+        totalPages: 5
+      };
+      mockPokemonService.getPokemonByType.mockResolvedValue(mockData);
+
+      const response = await request(app).get('/api/types/fire');
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.type).toBe('fire');
+    });
+
+    it('should accept page parameter', async () => {
+      const mockData = {
+        pokemon: [],
+        type: 'water',
+        totalCount: 100,
+        currentPage: 2,
+        totalPages: 5
+      };
+      mockPokemonService.getPokemonByType.mockResolvedValue(mockData);
+
+      const response = await request(app).get('/api/types/water?page=2');
+
+      expect(response.status).toBe(200);
+      expect(mockPokemonService.getPokemonByType).toHaveBeenCalledWith('water', 2);
+    });
+
+    it('should return 404 for non-existent type', async () => {
+      mockPokemonService.getPokemonByType.mockResolvedValue(null);
+
+      const response = await request(app).get('/api/types/nonexistent');
+
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+    });
+  });
 });
 
-describe('API routes (JSON)', () => {
-  test('GET /api/pokemon returns a paginated listing', async () => {
-    service.getAllPokemon.mockResolvedValue({ ...emptyListing, totalCount: 100 });
-
-    const res = await request(app).get('/api/pokemon?page=2&limit=20');
-
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.data.totalCount).toBe(100);
-    expect(service.getAllPokemon).toHaveBeenCalledWith(2, 20);
+describe('View Endpoints', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('GET /api/pokemon/:nameOrId returns a single Pokemon', async () => {
-    service.getPokemonDetails.mockResolvedValue(samplePokemon);
+  describe('GET /', () => {
+    it('should render home page with pokemon list', async () => {
+      mockPokemonService.getAllPokemon.mockResolvedValue({
+        pokemon: [{ id: 1, name: 'bulbasaur', displayName: 'Bulbasaur', types: ['grass'] }],
+        totalCount: 1000,
+        currentPage: 1,
+        totalPages: 50,
+        hasNextPage: true,
+        hasPrevPage: false
+      });
+      mockPokemonService.getPokemonTypes.mockResolvedValue([{ name: 'fire', displayName: 'Fire' }]);
 
-    const res = await request(app).get('/api/pokemon/pikachu');
+      const response = await request(app).get('/');
 
-    expect(res.status).toBe(200);
-    expect(res.body.data.displayName).toBe('Pikachu');
+      expect(response.status).toBe(200);
+      expect(response.type).toBe('text/html');
+    });
   });
 
-  test('GET /api/pokemon/:nameOrId returns 404 when not found', async () => {
-    service.getPokemonDetails.mockResolvedValue(null);
+  describe('GET /pokemon/:nameOrId', () => {
+    it('should render pokemon detail page', async () => {
+      mockPokemonService.getPokemonDetails.mockResolvedValue({
+        id: 25,
+        name: 'pikachu',
+        displayName: 'Pikachu',
+        types: ['electric'],
+        stats: [],
+        abilities: [],
+        description: 'Test',
+        genus: 'Mouse Pokemon'
+      });
 
-    const res = await request(app).get('/api/pokemon/missingno');
+      const response = await request(app).get('/pokemon/pikachu');
 
-    expect(res.status).toBe(404);
-    expect(res.body.success).toBe(false);
+      expect(response.status).toBe(200);
+      expect(response.type).toBe('text/html');
+    });
+
+    it('should render error page for non-existent pokemon', async () => {
+      mockPokemonService.getPokemonDetails.mockResolvedValue(null);
+
+      const response = await request(app).get('/pokemon/nonexistent');
+
+      expect(response.status).toBe(404);
+      expect(response.type).toBe('text/html');
+    });
   });
 
-  test('GET /api/pokemon/search is matched before the :nameOrId route', async () => {
-    service.searchPokemon.mockResolvedValue({ pokemon: [samplePokemon], totalCount: 1 });
+  describe('GET /search', () => {
+    it('should render search results', async () => {
+      mockPokemonService.searchPokemon.mockResolvedValue({
+        pokemon: [{ id: 25, name: 'pikachu', displayName: 'Pikachu', types: ['electric'] }],
+        totalCount: 1
+      });
+      mockPokemonService.getPokemonTypes.mockResolvedValue([]);
 
-    const res = await request(app).get('/api/pokemon/search?q=pika');
+      const response = await request(app).get('/search?q=pika');
 
-    expect(res.status).toBe(200);
-    expect(service.searchPokemon).toHaveBeenCalledWith('pika');
-    expect(service.getPokemonDetails).not.toHaveBeenCalled();
+      expect(response.status).toBe(200);
+      expect(response.type).toBe('text/html');
+    });
   });
 
-  test('GET /api/types returns the type list', async () => {
-    service.getPokemonTypes.mockResolvedValue([{ name: 'electric', displayName: 'Electric' }]);
+  describe('GET /type/:type', () => {
+    it('should render pokemon filtered by type', async () => {
+      mockPokemonService.getPokemonByType.mockResolvedValue({
+        pokemon: [{ id: 4, name: 'charmander', displayName: 'Charmander', types: ['fire'] }],
+        type: 'fire',
+        totalCount: 100,
+        currentPage: 1,
+        totalPages: 5,
+        hasNextPage: true,
+        hasPrevPage: false
+      });
+      mockPokemonService.getPokemonTypes.mockResolvedValue([{ name: 'fire', displayName: 'Fire' }]);
 
-    const res = await request(app).get('/api/types');
+      const response = await request(app).get('/type/fire');
 
-    expect(res.status).toBe(200);
-    expect(res.body.data).toHaveLength(1);
-  });
+      expect(response.status).toBe(200);
+      expect(response.type).toBe('text/html');
+    });
 
-  test('GET /api/types/:type returns 404 for an unknown type', async () => {
-    service.getPokemonByType.mockResolvedValue(null);
+    it('should render error page for non-existent type', async () => {
+      mockPokemonService.getPokemonByType.mockResolvedValue(null);
+      mockPokemonService.getPokemonTypes.mockResolvedValue([]);
 
-    const res = await request(app).get('/api/types/notatype');
+      const response = await request(app).get('/type/nonexistent');
 
-    expect(res.status).toBe(404);
-  });
-
-  test('returns 500 with a JSON error envelope when the service throws', async () => {
-    service.getAllPokemon.mockRejectedValue(new Error('upstream down'));
-
-    const res = await request(app).get('/api/pokemon');
-
-    expect(res.status).toBe(500);
-    expect(res.body).toEqual({ success: false, error: 'upstream down' });
+      expect(response.status).toBe(404);
+      expect(response.type).toBe('text/html');
+    });
   });
 });
 
-describe('View routes (HTML)', () => {
-  test('GET / renders the home page', async () => {
-    service.getAllPokemon.mockResolvedValue(emptyListing);
-    service.getPokemonTypes.mockResolvedValue([{ name: 'electric', displayName: 'Electric' }]);
+describe('404 Handler', () => {
+  it('should return 404 for unknown routes', async () => {
+    const response = await request(app).get('/unknown-route');
 
-    const res = await request(app).get('/');
-
-    expect(res.status).toBe(200);
-    expect(res.headers['content-type']).toMatch(/html/);
-    expect(res.text).toContain('Discover every Pokémon');
-  });
-
-  test('GET /pokemon/:nameOrId renders the detail page', async () => {
-    service.getPokemonDetails.mockResolvedValue(samplePokemon);
-
-    const res = await request(app).get('/pokemon/pikachu');
-
-    expect(res.status).toBe(200);
-    expect(res.text).toContain('Pikachu');
-    expect(res.text).toContain('Base stats');
-  });
-
-  test('GET /pokemon/:nameOrId renders a 404 error page when not found', async () => {
-    service.getPokemonDetails.mockResolvedValue(null);
-
-    const res = await request(app).get('/pokemon/missingno');
-
-    expect(res.status).toBe(404);
-    expect(res.text).toContain('Pokemon not found');
-  });
-
-  test('unknown routes render the 404 error page', async () => {
-    const res = await request(app).get('/this/does/not/exist');
-
-    expect(res.status).toBe(404);
-    expect(res.text).toContain('Page not found');
+    expect(response.status).toBe(404);
+    expect(response.type).toBe('text/html');
   });
 });

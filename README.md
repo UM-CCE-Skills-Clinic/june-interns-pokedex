@@ -1,48 +1,19 @@
-# 🔴 Pokedex App — Build It Yourself
+# 🔴 Pokedex App
 
-A hands-on tutorial for building a **Pokedex web application** with Node.js and Express.js using a clean **layered architecture**. You learn by building: the application source code is **not included** — you create it yourself, step by step, by following the guide.
+A Pokedex web application built with Node.js and Express.js, featuring a layered architecture pattern. This project serves as a learning resource for understanding modern web development practices.
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-4.x-000000?style=flat&logo=express&logoColor=white)
-![EJS](https://img.shields.io/badge/EJS-Templates-b4ca65?style=flat)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-CDN-38bdf8?style=flat&logo=tailwindcss&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
----
-
-## 📚 Start Here — The Guide
-
-> ### 👉 **[Open the Guide → Part 00: Introduction](guide/00-introduction.md)**
->
-> This is the heart of the project. The guide walks you through building the **entire** app from an empty folder to a finished, tested application — in order, with nothing skipped.
-
-| Part | Topic | Link |
-|------|-------|------|
-| 00 | Introduction | [Read](guide/00-introduction.md) |
-| 01 | Project Setup | [Read](guide/01-project-setup.md) |
-| 02 | Understanding Architecture | [Read](guide/02-understanding-architecture.md) |
-| 03 | Configuration | [Read](guide/03-configuration.md) |
-| 04 | Building the Repository | [Read](guide/04-building-the-repository.md) |
-| 05 | Building the Service | [Read](guide/05-building-the-service.md) |
-| 06 | Building the Controller | [Read](guide/06-building-the-controller.md) |
-| 07 | Building the Routes | [Read](guide/07-building-the-routes.md) |
-| 08 | Building the Views | [Read](guide/08-building-the-views.md) |
-| 09 | App Entry Point | [Read](guide/09-building-the-app.md) |
-| 10 | Testing | [Read](guide/10-testing.md) |
-| 11 | Running the App | [Read](guide/11-running-the-app.md) |
-
-> ℹ️ **No `src/` folder?** That's intentional. You'll create every file in `src/` as you work through Parts 01–11. By the end you'll have a complete, running Pokedex.
-
----
-
-## ✨ What You'll Build
+## ✨ Features
 
 - 📋 Paginated list of Pokemon
-- 🔍 Search Pokemon by name or ID
+- 🔍 Search Pokemon by name
 - 🏷️ Filter Pokemon by type
-- 📄 Detailed Pokemon pages with full stats
+- 📄 Detailed Pokemon information pages
 - 🌐 RESTful JSON API endpoints
-- 🎨 Server-side rendered views (EJS) styled with Tailwind CSS
+- 🎨 Server-side rendered HTML views with EJS
 
 ## 🛠️ Tech Stack
 
@@ -51,21 +22,39 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 | **Node.js** | JavaScript runtime |
 | **Express.js** | Web framework |
 | **EJS** | Template engine |
-| **Tailwind CSS (CDN)** | Utility-first styling — no build step |
 | **Axios** | HTTP client |
 | **PokeAPI** | Pokemon data source |
-| **Jest + Supertest** | Testing framework |
+| **Jest** | Testing framework |
 
----
+## 📚 Documentation
 
-## 🚀 Getting Started
+**👉 [Start the Guide](docs/guide/00-introduction.md)**
+
+This project includes a comprehensive step-by-step guide for building the application:
+
+| Part | Topic | Link |
+|------|-------|------|
+| 00 | Introduction | [Read](docs/guide/00-introduction.md) |
+| 01 | Project Setup | [Read](docs/guide/01-project-setup.md) |
+| 02 | Understanding Architecture | [Read](docs/guide/02-understanding-architecture.md) |
+| 03 | Configuration | [Read](docs/guide/03-configuration.md) |
+| 04 | Building the Repository | [Read](docs/guide/04-building-the-repository.md) |
+| 05 | Building the Service | [Read](docs/guide/05-building-the-service.md) |
+| 06 | Building the Controller | [Read](docs/guide/06-building-the-controller.md) |
+| 07 | Building the Routes | [Read](docs/guide/07-building-the-routes.md) |
+| 08 | Building the Views | [Read](docs/guide/08-building-the-views.md) |
+| 09 | Styling | [Read](docs/guide/09-styling.md) |
+| 10 | Testing | [Read](docs/guide/10-testing.md) |
+| 11 | Running the App | [Read](docs/guide/11-running-the-app.md) |
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js (version 18 or higher)
 - npm (comes with Node.js)
 
-### Set up your workspace
+### Installation
 
 1. **Clone the repository**
    ```bash
@@ -83,15 +72,15 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
    cp .env.example .env
    ```
 
-4. **Open the guide and start building**
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-   👉 **[guide/00-introduction.md](guide/00-introduction.md)**
-
-> The app can only run after you've built `src/` by following the guide. Once you reach **Part 09**, `npm run dev` will start the server at `http://localhost:3000`.
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
 ## 📜 Available Scripts
-
-> These become available as you build the app in the guide.
 
 | Command | Description |
 |---------|-------------|
@@ -103,44 +92,40 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 | `npm run format` | Format code with Prettier |
 | `npm run format:check` | Check code formatting |
 
----
-
 ## 🏗️ Project Architecture
 
-You'll build the app following a **layered architecture** pattern:
+This project follows a **layered architecture** pattern:
 
 ```
 Routes → Controllers → Services → Repositories → External API (PokeAPI)
 ```
 
-The `src/` structure you create as you follow the guide:
-
 ```
 src/
-├── app.js              # Application entry point (Part 09)
+├── app.js              # Application entry point
 ├── config/             # Configuration files
 ├── controllers/        # HTTP request handlers
 ├── repositories/       # Data access layer
 ├── routes/             # URL routing
 ├── services/           # Business logic
-└── views/              # EJS templates (styled with Tailwind CDN)
+└── views/              # EJS templates
 
-public/                 # Static assets (styling via Tailwind CDN — no CSS build)
+public/
+└── css/                # Stylesheets
 ```
 
 ## 🧪 Testing
 
-In **[Part 10](guide/10-testing.md)** you'll write and run the test suite:
+Run the test suite:
 
 ```bash
 npm test
 ```
 
-The tests cover:
-- API endpoints (`tests/api.test.js`)
-- Service layer (`tests/pokemonService.test.js`)
-
----
+Tests are located in the `tests/` directory and cover:
+- API endpoints (`api.test.js`)
+- Repository layer (`pokemonRepository.test.js`)
+- Service layer (`pokemonService.test.js`)
 
 ## 📄 License
 
