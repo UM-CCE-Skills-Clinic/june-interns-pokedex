@@ -48,6 +48,32 @@
 			<% } else { %>
 				<div class="py-16 text-center text-slate-500">No Pokémon to show yet.</div>
 			<% } %>
+
+			<% if ((totalPages || 0) > 1) { %>
+				<%
+					const basePath = selectedType
+						? `/type/${selectedType}?page=`
+						: searchQuery
+							? `/search?q=${encodeURIComponent(searchQuery)}&page=`
+							: '/?page=';
+				%>
+				<div class="mt-6 flex flex-col items-center gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between">
+					<p class="text-sm text-slate-500">Page <%= currentPage || 1 %> of <%= totalPages %></p>
+					<div class="flex items-center gap-2">
+						<% if (hasPrevPage) { %>
+							<a href="<%= basePath + ((currentPage || 1) - 1) %>" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand-200 hover:text-brand-700">Previous</a>
+						<% } else { %>
+							<span class="rounded-xl border border-slate-100 px-3 py-2 text-sm font-semibold text-slate-300">Previous</span>
+						<% } %>
+
+						<% if (hasNextPage) { %>
+							<a href="<%= basePath + ((currentPage || 1) + 1) %>" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand-200 hover:text-brand-700">Next</a>
+						<% } else { %>
+							<span class="rounded-xl border border-slate-100 px-3 py-2 text-sm font-semibold text-slate-300">Next</span>
+						<% } %>
+					</div>
+				</div>
+			<% } %>
 		</section>
 	</div>
 </section>
