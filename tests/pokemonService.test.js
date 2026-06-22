@@ -184,7 +184,8 @@ describe('getPokemonTypes', () => {
     repo.getPokemonTypes.mockResolvedValue([
       { name: 'electric' },
       { name: 'unknown' },
-      { name: 'shadow' }
+      { name: 'shadow' },
+      { name: 'stellar' }
     ]);
 
     const result = await service.getPokemonTypes();
