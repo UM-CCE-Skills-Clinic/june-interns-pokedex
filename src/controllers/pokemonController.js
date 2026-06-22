@@ -165,7 +165,6 @@ export const apiSearchPokemon = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 /**
  * API: Get all types
  */
@@ -177,7 +176,6 @@ export const apiGetTypes = async (_req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 /**
  * API: Get Pokemon by type
  */
@@ -198,4 +196,6 @@ export const apiGetPokemonByType = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
+
+  
 };
