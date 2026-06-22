@@ -74,56 +74,6 @@ const formatPokemonData = (pokemon, species = null) => {
 };
 
 /**
- * Transform raw PokeAPI data into a display-ready object.
- */
-const formatPokemonData = (pokemon, species = null) => {
-  const description =
-    species?.flavor_text_entries
-      ?.find((entry) => entry.language.name === 'en')
-      ?.flavor_text?.replace(/[\f\n\r]/g, ' ') || 'No description available.';
-
-  const genus = species?.genera?.find((g) => g.language.name === 'en')?.genus || 'Unknown';
-
-  const stats = pokemon.stats.map((s) => ({
-    name: formatStatName(s.stat.name),
-    value: s.base_stat
-  }));
-
-  const totalStats = stats.reduce((sum, s) => sum + s.value, 0);
-
-  return {
-    id: pokemon.id,
-    name: pokemon.name,
-    displayName: formatName(pokemon.name),
-
-    image:
-      pokemon.sprites?.other?.['official-artwork']?.front_default ||
-      pokemon.sprites?.front_default ||
-      '',
-    sprite: pokemon.sprites?.front_default || '',
-
-    types: pokemon.types.map((t) => t.type.name),
-
-    height: pokemon.height / 10, // decimeters -> meters
-    weight: pokemon.weight / 10, // hectograms -> kilograms
-
-    abilities: pokemon.abilities.map((a) => ({
-      name: formatName(a.ability.name),
-      isHidden: a.is_hidden
-    })),
-
-    stats,
-    totalStats,
-
-    description,
-    genus,
-    color: species?.color?.name || 'gray',
-    captureRate: species?.capture_rate || 0,
-    baseHappiness: species?.base_happiness || 0
-  };
-};
-
-/**
  * Paginated list of Pokemon with full details for each entry.
  */
 export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
