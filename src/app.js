@@ -16,7 +16,7 @@ const { port: PORT, nodeEnv } = config;
 // ============================================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(join(__dirname, '../public')));
+// public/ directory intentionally left empty — favicon is inlined; Tailwind is served via CDN.
 
 // ============================================
 // VIEW ENGINE
@@ -58,13 +58,18 @@ app.use('/', routes);
 // ============================================
 app.use((req, res) => {
   res.status(404).render('error', {
+    pageTitle: 'Page Not Found',
     message: 'Page not found',
     error: 'The page you are looking for does not exist.'
   });
 });
 
-app.use((err, _req, res, _next) => {
+app.use((err, req, res, _next) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
   res.status(500).render('error', {
+    pageTitle: 'Server Error',
     message: 'Something went wrong',
     error: err.message
   });
@@ -74,8 +79,16 @@ app.use((err, _req, res, _next) => {
 // START SERVER
 // ============================================
 if (nodeEnv !== 'test') {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Pokedex server running at http://localhost:${PORT}`);
+  });
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use. Is another server already running?`);
+    } else {
+      console.error('Server error:', err.message);
+    }
+    process.exit(1);
   });
 }
 

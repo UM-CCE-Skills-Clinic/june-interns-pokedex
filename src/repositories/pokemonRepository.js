@@ -26,11 +26,9 @@ export const getPokemonByNameOrId = async (nameOrId) => {
   }
 };
 
-export const getPokemonSpecies = async (nameOrId) => {
+export const getPokemonSpecies = async (id) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/pokemon-species/${nameOrId.toString().toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/pokemon-species/${id}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
