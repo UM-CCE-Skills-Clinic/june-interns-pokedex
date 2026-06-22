@@ -29,9 +29,7 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
  */
 export const getPokemonByNameOrId = async (nameOrId) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`);
     return response.data;
   } catch (error) {
     // Return null for 404 (not found) instead of throwing
@@ -119,4 +117,3 @@ export const getPokemonByType = async (typeName) => {
     throw new Error(`Failed to fetch Pokemon by type: ${error.message}`);
   }
 };
-
