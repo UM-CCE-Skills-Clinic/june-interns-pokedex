@@ -61,3 +61,5 @@ if (nodeEnv !== 'test') {
 }
 
 export default app;
+
+// finalizing the app and exporting it for testing purposes.
