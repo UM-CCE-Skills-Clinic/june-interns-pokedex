@@ -202,11 +202,13 @@ jobs:
     needs: [extract-student-info, verify, verify-authorship]
     steps:
       - name: Submit student details to API
-        env:
+       env:
           FIRST_NAME: ${{ needs.extract-student-info.outputs.first_name }}
           LAST_NAME: ${{ needs.extract-student-info.outputs.last_name }}
           PROGRAM: ${{ needs.extract-student-info.outputs.program }}
           STUDENT_EMAIL: ${{ needs.extract-student-info.outputs.student_email }}
+          SUBMISSION_API_URL: ${{ secrets.SUBMISSION_API_URL }}      # <-- add this
+          SUBMISSION_API_TOKEN: ${{ secrets.SUBMISSION_API_TOKEN }}  # <-- add this
         run: |
           echo "All checks passed. Ready to submit the following details:"
           echo "  First Name : $FIRST_NAME"
@@ -228,9 +230,9 @@ jobs:
           # still prints the API's error message (which explains the 400).
           HTTP_STATUS=$(curl --silent --show-error \
             -o response.txt -w "%{http_code}" \
-            -X POST "${{ secrets.SUBMISSION_API_URL }}" \
+            -X POST "$SUBMISSION_API_URL" \
             -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.SUBMISSION_API_TOKEN }}" \
+            -H "Authorization: Bearer $SUBMISSION_API_TOKEN" \
             -d "$PAYLOAD")
 
           echo "HTTP status: $HTTP_STATUS"
