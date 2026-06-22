@@ -11,7 +11,7 @@ Last Name: Dingal
 Program: BSCS
 UMindanao Email: r.dingal.548396@umindanao.edu.ph
 
-
+npx prettier --write "src/repositories/pokemonRepository.js"
 ## Summary
 
 <!-- Briefly describe what you built. -->
