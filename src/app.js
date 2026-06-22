@@ -12,11 +12,6 @@ const __dirname = dirname(__filename);
 const app = express();
 const { port: PORT, nodeEnv } = config;
 
-// ============================================
-// VIEW ENGINE
-// ============================================
-app.set('view engine', 'ejs');
-app.set('views', join(__dirname, 'views'));
 
 // ============================================
 // MIDDLEWARE
@@ -25,6 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, '../public')));
 
+// ============================================
+// VIEW ENGINE
+// ============================================
+app.set('view engine', 'ejs');
+app.set('views', join(__dirname, 'views'));
 
 
 // ============================================
