@@ -131,7 +131,7 @@ git push -u origin dela-cruz/pokedex-pull-request
 
 **Title:**
 ```
-feat: complete pokedex application
+<Your Last Name>/pokedex-pull-request
 ```
 
 **Student Information** — replace each value with your own. Keep the labels **exactly** as shown (the pipeline reads them character-for-character), and use your real `@umindanao.edu.ph` address:
