@@ -1,4 +1,4 @@
-# 🔴 Pokedex App — Build It Yourselfs
+# 🔴 Pokedex App — Build It Yourself
 
 A hands-on tutorial for building a **Pokedex web application** with Node.js and Express.js using a clean **layered architecture**. You learn by building: the application source code is **not included** — you create it yourself, step by step, by following the guide.
 
