@@ -11,7 +11,6 @@ const __dirname = dirname(__filename);
 const app = express();
 const { port: PORT, nodeEnv } = config;
 
-
 // ============================================
 // MIDDLEWARE
 // ============================================
@@ -19,13 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, '../public')));
 
-
 // ============================================
 // VIEW ENGINE
 // ============================================
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
-
 
 // ============================================
 // VIEW HELPERS (available in every template)
@@ -56,8 +53,6 @@ app.locals.typeColors = {
 // ============================================
 app.use('/', routes);
 
-
-
 // ============================================
 // ERROR HANDLERS
 // ============================================
@@ -75,7 +70,6 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-
 // ============================================
 // START SERVER
 // ============================================
@@ -86,4 +80,3 @@ if (nodeEnv !== 'test') {
 }
 
 export default app;
-
