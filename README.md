@@ -32,7 +32,7 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 | 11   | Running the App            | [Read](guide/11-running-the-app.md)            |
 
 > ℹ️ **No `src/` folder?** That's intentional. You'll create every file in `src/` as you work through Parts 01–11. By the end you'll have a complete, running Pokedex.
-
+s
 ---
 
 ## ✨ What You'll Build
