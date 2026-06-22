@@ -3,7 +3,6 @@ import * as pokemonController from '../controllers/pokemonController.js';
 
 const router = Router();
 
-
 // ============================================
 // VIEW ROUTES (Return HTML)
 // ============================================
@@ -38,6 +37,5 @@ router.get('/api/types', pokemonController.apiGetTypes);
 
 // Get Pokemon by type
 router.get('/api/types/:type', pokemonController.apiGetPokemonByType);
-
 
 export default router;
