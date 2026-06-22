@@ -6,15 +6,6 @@ import routes from './routes/index.js';
 
 
 // ============================================
-// MIDDLEWARE
-// ============================================
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(join(__dirname, '../public')));
-
-
-
-// ============================================
 // VIEW ENGINE
 // ============================================
 app.set('view engine', 'ejs');
@@ -27,6 +18,16 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const { port: PORT, nodeEnv } = config;
+
+
+// ============================================
+// MIDDLEWARE
+// ============================================
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(join(__dirname, '../public')));
+
+
 
 // ============================================
 // VIEW HELPERS (available in every template)
