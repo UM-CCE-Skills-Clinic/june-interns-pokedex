@@ -21,7 +21,7 @@ build/
 # Project files intentionally ignored
 .env.example
 .prettierrc
-docs/
+guide/
 eslint.config.js
 jest.config.js
 package.json
