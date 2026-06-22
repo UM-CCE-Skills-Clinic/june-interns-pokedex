@@ -27,6 +27,7 @@ jest.config.js
 package.json
 package-lock.json
 tests/
+.github/
 
 # IDE / Editor
 .idea/
