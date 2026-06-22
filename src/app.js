@@ -18,13 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, '../public')));
 
-
 // ============================================
 // VIEW ENGINE
 // ============================================
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
-
 
 // ============================================
 // VIEW HELPERS (available in every template)
@@ -50,12 +48,10 @@ app.locals.typeColors = {
   fairy: '#ec8fe6'
 };
 
-
 // ============================================
 // ROUTES
 // ============================================
 app.use('/', routes);
-
 
 // ============================================
 // ERROR HANDLERS
@@ -73,8 +69,6 @@ app.use((err, _req, res, _next) => {
     error: err.message
   });
 });
-
-
 
 // ============================================
 // START SERVER
