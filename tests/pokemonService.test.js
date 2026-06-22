@@ -11,9 +11,10 @@ jest.unstable_mockModule('../src/repositories/pokemonRepository.js', () => ({
 }));
 
 const repo = await import('../src/repositories/pokemonRepository.js');
-const service = await import('../src/services/pokemonService.js');
+const service = await import('../src/services/pokemonService.js'); // 👈 ADD '.js' HERE
 
 const rawPikachu = {
+// ... rest of your test code stays exactly the same ...
   id: 25,
   name: 'pikachu',
   height: 4, // decimeters

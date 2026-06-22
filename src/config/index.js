@@ -5,7 +5,7 @@ dotenv.config();
 
 export const config = {
   // Server settings
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 8080, // 👈 Change 3000 to 8080 here
   nodeEnv: process.env.NODE_ENV || 'development',
 
   // PokeAPI settings
