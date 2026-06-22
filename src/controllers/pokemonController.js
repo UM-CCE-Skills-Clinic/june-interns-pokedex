@@ -114,8 +114,6 @@ export const getPokemonByType = async (req, res) => {
   }
 };
 
-
-
 // ============================================
 // API CONTROLLERS (Return JSON)
 // ============================================
@@ -201,4 +199,3 @@ export const apiGetPokemonByType = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
