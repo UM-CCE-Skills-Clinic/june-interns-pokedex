@@ -1,19 +1,3 @@
-## Summary
-
-<!-- Briefly describe what you built. -->
-
-- Implemented Pokemon list with pagination
-- Added search by name/ID and type filtering
-- Created detail pages with full stats
-- Styled the UI with Tailwind CSS (Play CDN)
-- Added Jest + Supertest tests for the service and HTTP layers
-
-## Checklist
-
-- [ ] All tests pass (`npm test`)
-- [ ] Code is formatted (`npm run format:check`)
-- [ ] No linting errors (`npm run lint`)
-
 ## Student Information
 
 <!--
@@ -26,3 +10,14 @@ First Name:
 Last Name: 
 Program: 
 UMindanao Email: 
+
+
+## Summary
+
+<!-- Briefly describe what you built. -->
+
+- Implemented Pokemon list with pagination
+- Added search by name/ID and type filtering
+- Created detail pages with full stats
+- Styled the UI with Tailwind CSS (Play CDN)
+- Added Jest + Supertest tests for the service and HTTP layers
