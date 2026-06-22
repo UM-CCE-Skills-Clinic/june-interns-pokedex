@@ -35,7 +35,7 @@ Your job is to run them and confirm everything you built in the previous parts p
 1. Run the test command:
 
 ```bash
-npm test
+npm testhttp://localhost:3000/
 ```
 
 2. You should see all tests pass:
