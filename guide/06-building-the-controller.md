@@ -37,9 +37,25 @@ import * as pokemonService from '../services/pokemonService.js';
 3. Save the file
 
 ---
+export const getAllPokemon = async (page = 1, limit = config.pagination.defaultLimit) => {
+  const offset = (page - 1) * limit;
+  const data = await pokemonRepository.getAllPokemon(limit, offset);
 
+  const pokemonWithDetails = await Promise.all(
+    data.results.map((pokemon) => getPokemonDetails(pokemon.name))
+  );
+
+  return {
+    pokemon: pokemonWithDetails.filter((p) => p !== null),
+    totalCount: data.count,
+    currentPage: page,
+    totalPages: Math.ceil(data.count / limit),
+    hasNextPage: offset + limit < data.count,
+    hasPrevPage: page > 1
+  };
+};
 ## Step 2: Add getHomePage Controller
-
+import * as pokemonService from '../services/pokemonService.js';
 1. Add this controller for the home page:
 
 ```javascript
@@ -52,7 +68,199 @@ import * as pokemonService from '../services/pokemonService.js';
  */
 export const getHomePage = async (req, res) => {
   try {
-    // Get pagination parameters from query string
+    // Get pagination parameters from query simport * as pokemonService from '../services/pokemonexport const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuexport const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+};ery: '',export const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const pageexport const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+}; = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+};
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+};Service.js';tring
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 20;
 
@@ -160,7 +368,68 @@ export const searchPokemon = async (req, res) => {
  * Filter by type page
  */
 export const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
   try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuexport const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
     const { type } = req.params;
     const page = parseInt(req.query.page, 10) || 1;
     const types = await pokemonService.getPokemonTypes();
@@ -177,6 +446,111 @@ export const getPokemonByType = async (req, res) => {
       ...data,
       types,
       searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+};ery: '',export const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const pageexport const getPokemonByType = async (req, res) => {
+  try {export const searchPokemon = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.searchPokemon(q);
+
+    res.render('index', {
+      ...data,
+      types,
+      currentPage: 1,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+      searchQuery: q || '',
+      selectedType: ''
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Search failed',
+      error: error.message
+    });
+  }
+};
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+}; = parseInt(req.query.page, 10) || 1;
+    const types = await pokemonService.getPokemonTypes();
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
+    }
+
+    res.render('index', {
+      ...data,
+      types,
+      searchQuery: '',
+      selectedType: type
+    });
+  } catch (error) {
+    res.status(500).render('error', {
+      message: 'Failed to load Pokemon by type',
+      error: error.message
+    });
+  }
+};
       selectedType: type
     });
   } catch (error) {
@@ -232,7 +606,8 @@ export const apiGetPokemonDetails = async (req, res) => {
 
     res.json({ success: true, data: pokemon });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.s  try {
+tatus(500).json({ success: false, error: error.message });
   }
 };
 
@@ -299,7 +674,24 @@ Your controller file should have all these exported functions:
 - `apiGetPokemonDetails`
 - `apiSearchPokemon`
 - `apiGetTypes`
-- `apiGetPokemonByType`
+- `apiexport const apiGetPokemonByType = async (req, res) => {
+  try {
+    const { type } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const data = await pokemonService.getPokemonByType(type, page);
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        error: `Type not found: ${type}`
+      });
+    }
+
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};GetPokemonByType`
 
 ---
 
