@@ -196,7 +196,7 @@ jobs:
           retention-days: 7
 
   submit:
-    name: Submit Student Info
+    name: Send Certificate
     runs-on: ubuntu-latest
     # Runs last: only after the student info is valid AND all checks pass.
     needs: [extract-student-info, verify, verify-authorship]
