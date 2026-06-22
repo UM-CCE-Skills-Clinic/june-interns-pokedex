@@ -69,7 +69,7 @@ app.use((err, _req, res, _next) => {
 // ============================================
 if (nodeEnv !== 'test') {
   app.listen(PORT, () => {
-    console.log('Pokedex server running at http://localhost:${PORT}');
+    console.log(`Pokedex server running at http://localhost:${PORT}`);
   });
 }
 
