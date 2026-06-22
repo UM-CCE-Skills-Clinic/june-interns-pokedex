@@ -10,6 +10,7 @@ A hands-on tutorial for building a **Pokedex web application** with Node.js and 
 
 ---
 
+
 ## 📚 Start Here — The Guide
 
 > ### 👉 **[Open the Guide → Part 00: Introduction](guide/00-introduction.md)**
