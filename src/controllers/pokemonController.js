@@ -1,3 +1,5 @@
+import * as pokemonService from '../services/pokemonService.js';
+
 // ============================================
 // VIEW CONTROLLERS (Return HTML via EJS)
 // ============================================
@@ -197,4 +199,5 @@ export const apiGetPokemonByType = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
