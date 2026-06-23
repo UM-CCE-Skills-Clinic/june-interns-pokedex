@@ -9,15 +9,12 @@ import * as pokemonService from '../services/pokemonService.js';
  */
 export const getHomePage = async (req, res) => {
   try {
-    // Get pagination parameters from query string
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 20;
 
-    // Fetch data from services
     const data = await pokemonService.getAllPokemon(page, limit);
     const types = await pokemonService.getPokemonTypes();
 
-    // Render the index template
     res.render('index', {
       ...data,
       types,
