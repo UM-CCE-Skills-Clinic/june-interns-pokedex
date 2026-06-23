@@ -135,6 +135,7 @@ export const getPokemonTypes = async () => {
     .map((t) => ({ name: t.name, displayName: formatName(t.name) }));
 };
 
+
 export const getPokemonByType = async (
   typeName,
   page = 1,
