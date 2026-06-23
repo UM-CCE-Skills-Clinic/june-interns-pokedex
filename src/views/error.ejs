@@ -1,0 +1,112 @@
+<%- include('partials/header') %>
+
+<!-- Error Page -->
+<div class="flex flex-col items-center justify-center py-16 min-h-[60vh]">
+  <div class="text-center">
+    <!-- Animated Pokéball -->
+    <div class="mb-8 flex justify-center">
+      <div class="relative w-24 h-24 animate-bounce">
+        <!-- Pokéball SVG -->
+        <svg
+          viewBox="0 0 100 100"
+          class="w-full h-full"
+          fill="none"
+          stroke="currentColor"
+        >
+          <!-- Top half (red) -->
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="#EE1515"
+            stroke-width="8"
+            fill="#EE1515"
+          />
+
+          <!-- Bottom half (white) -->
+          <ellipse
+            cx="50"
+            cy="50"
+            rx="45"
+            ry="45"
+            stroke="#FFFFFF"
+            stroke-width="8"
+            fill="none"
+            clip-path="polygon(0 50%, 100 50%, 100 100%, 0 100%)"
+          />
+
+          <!-- Middle line -->
+          <line
+            x1="5"
+            y1="50"
+            x2="95"
+            y2="50"
+            stroke="#000000"
+            stroke-width="2"
+          />
+
+          <!-- Center button -->
+          <circle
+            cx="50"
+            cy="50"
+            r="8"
+            fill="#FFFFFF"
+            stroke="#000000"
+            stroke-width="1"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Error Title -->
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      <%= message %>
+    </h1>
+
+    <!-- Error Description -->
+    <p class="text-lg text-gray-600 mb-8 max-w-md">
+      <%= error %>
+    </p>
+
+    <!-- Button -->
+    <a
+      href="/"
+      class="px-8 py-3 bg-gradient-to-r from-pokemon-blue to-pokemon-purple text-white rounded-lg hover:shadow-lg transition-shadow font-semibold"
+    >
+      Back to Pokédex
+    </a>
+  </div>
+
+  <!-- Decorative Pokémon sketches -->
+  <div class="grid grid-cols-3 gap-8 mt-16 opacity-10">
+    <div class="text-center">
+      <svg
+        class="w-16 h-16 mx-auto text-pokemon-red"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    </div>
+    <div class="text-center">
+      <svg
+        class="w-16 h-16 mx-auto text-pokemon-blue"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    </div>
+    <div class="text-center">
+      <svg
+        class="w-16 h-16 mx-auto text-pokemon-yellow"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,179 @@
+<%- include('partials/header') %>
+
+<%
+  const typeColors = {
+    'normal': '#A8A878',
+    'fighting': '#C03028',
+    'flying': '#A890F0',
+    'poison': '#A040A0',
+    'ground': '#E0C068',
+    'rock': '#B8A038',
+    'bug': '#A8B820',
+    'ghost': '#705898',
+    'steel': '#B8B8D0',
+    'fire': '#F08030',
+    'water': '#6890F0',
+    'grass': '#78C850',
+    'electric': '#F8D030',
+    'psychic': '#F85888',
+    'ice': '#98D8D8',
+    'dragon': '#7038F8',
+    'dark': '#705848',
+    'fairy': '#EE99AC',
+    'unknown': '#68A090',
+    'shadow': '#705898'
+  };
+%>
+
+<!-- Hero Section -->
+<section class="mb-12 animate-slide-up">
+  <% if (searchQuery) { %>
+    <div class="bg-gradient-to-r from-pokemon-red/20 to-pokemon-blue/20 rounded-2xl p-8 border border-pokemon-red/20">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        Search Results
+      </h1>
+      <p class="text-lg text-gray-600">
+        Found <%= totalCount %> result<%= totalCount !== 1 ? 's' : '' %> for "<strong><%= searchQuery %></strong>"
+      </p>
+    </div>
+  <% } else if (selectedType) { %>
+    <div
+      class="bg-gradient-to-r rounded-2xl p-8 border-2 text-white"
+      style="background: linear-gradient(135deg, <%= typeColors[selectedType] || '#9099a1' %>80 0%, <%= typeColors[selectedType] || '#9099a1' %>40 100%); border-color: <%= typeColors[selectedType] || '#9099a1' %>"
+    >
+      <h1 class="text-4xl font-bold mb-2">
+        <%= selectedType.charAt(0).toUpperCase() + selectedType.slice(1) %> Pokémon
+      </h1>
+      <p class="text-lg opacity-90">
+        Showing <%= pokemon.length %> of <%= totalCount %> Pokémon
+      </p>
+    </div>
+  <% } else { %>
+    <div class="bg-gradient-to-r from-pokemon-blue/20 to-pokemon-purple/20 rounded-2xl p-8 border border-pokemon-blue/20">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        Discover every Pokémon
+      </h1>
+      <p class="text-lg text-gray-600">
+        Browse all <%= totalCount %> Pokémon from the Pokedex
+      </p>
+    </div>
+  <% } %>
+</section>
+
+<!-- Type Filter Navigation -->
+<% if (types && types.length > 0) { %>
+  <section class="mb-8">
+    <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+      <a
+        href="/"
+        class="px-4 py-2 rounded-full font-semibold transition-all <%= !selectedType ? 'bg-pokemon-blue text-white shadow-lg' : 'bg-white text-gray-700 border border-gray-200 hover:border-pokemon-blue' %>"
+      >
+        All Types
+      </a>
+      <% types.forEach((type) => { %>
+        <a
+          href="/type/<%= type.name %>"
+          class="px-4 py-2 rounded-full font-semibold text-white transition-all hover:shadow-lg <%= selectedType === type.name ? 'shadow-lg scale-105' : 'opacity-80 hover:opacity-100' %>"
+          style="background-color: <%= typeColors[type.name] || '#9099a1' %>"
+        >
+          <%= type.displayName %>
+        </a>
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+
+<!-- Pokémon Grid -->
+<% if (pokemon && pokemon.length > 0) { %>
+  <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+    <% pokemon.forEach((poke) => { %>
+      <%- include('partials/card', { poke }) %>
+    <% }); %>
+  </section>
+
+  <!-- Pagination (hide during search) -->
+  <% if (!searchQuery && totalPages > 1) { %>
+    <nav
+      class="flex justify-center items-center gap-2 mb-8"
+      aria-label="Pagination"
+    >
+      <% if (hasPrevPage) { %>
+        <a
+          href="<%= selectedType ? '/type/' + selectedType : '/' %>?page=<%= currentPage - 1 %>"
+          class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          ← Previous
+        </a>
+      <% } else { %>
+        <button
+          disabled
+          class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed"
+        >
+          ← Previous
+        </button>
+      <% } %>
+
+      <div class="flex items-center gap-2">
+        <span class="text-gray-600 font-medium">
+          Page <%= currentPage %> of <%= totalPages %>
+        </span>
+      </div>
+
+      <% if (hasNextPage) { %>
+        <a
+          href="<%= selectedType ? '/type/' + selectedType : '/' %>?page=<%= currentPage + 1 %>"
+          class="px-4 py-2 bg-pokemon-blue text-white rounded-lg hover:bg-pokemon-blue/90 transition-colors"
+        >
+          Next →
+        </a>
+      <% } else { %>
+        <button
+          disabled
+          class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed"
+        >
+          Next →
+        </button>
+      <% } %>
+    </nav>
+  <% } %>
+
+<% } else { %>
+  <!-- Empty State -->
+  <section class="flex flex-col items-center justify-center py-16">
+    <div class="text-center">
+      <svg
+        class="w-24 h-24 mx-auto text-gray-300 mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">
+        No Pokémon found
+      </h2>
+      <p class="text-gray-600 mb-6">
+        <% if (searchQuery) { %>
+          Try searching with a different name
+        <% } else if (selectedType) { %>
+          No Pokémon found for this type
+        <% } else { %>
+          No Pokémon available
+        <% } %>
+      </p>
+      <a
+        href="/"
+        class="px-6 py-3 bg-pokemon-blue text-white rounded-lg hover:bg-pokemon-blue/90 transition-colors"
+      >
+        Back to Home
+      </a>
+    </div>
+  </section>
+<% } %>
+
+<%- include('partials/footer') %>

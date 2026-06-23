@@ -1,0 +1,45 @@
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 mt-16 border-t border-gray-200 bg-white/50 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-sm text-gray-600">
+          <p>
+            Data powered by
+            <a
+              href="https://pokeapi.co"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-pokemon-blue hover:underline font-semibold"
+            >
+              PokéAPI
+            </a>
+          </p>
+        </div>
+        <div class="text-sm text-gray-600">
+          <p>
+            Built with Node.js, Express, EJS, and Tailwind CSS
+          </p>
+        </div>
+        <div class="text-sm text-gray-500">
+          <p>&copy; 2026 Pokédex. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Stat animation script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const statFills = document.querySelectorAll('.stat-fill');
+      statFills.forEach((bar) => {
+        const width = bar.getAttribute('data-width');
+        setTimeout(() => {
+          bar.style.width = width + '%';
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>
