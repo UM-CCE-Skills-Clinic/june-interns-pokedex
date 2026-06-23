@@ -184,7 +184,3 @@ export const getPokemonByType = async (
   };
 };
 
-const pokemonWithDetails = await Promise.all(
-  data.results.map((pokemon) => getPokemonDetails(pokemon.name))
-);
-

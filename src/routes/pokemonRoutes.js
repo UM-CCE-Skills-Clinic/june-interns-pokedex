@@ -39,4 +39,3 @@ router.get('/api/types', pokemonController.apiGetTypes);
 router.get('/api/types/:type', pokemonController.apiGetPokemonByType);
 
 export default router;
-
