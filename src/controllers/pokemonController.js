@@ -9,20 +9,13 @@ import * as pokemonService from '../services/pokemonService.js';
  */
 export const getHomePage = async (req, res) => {
   try {
-    const page =
-      parseInt(req.query.page, 10) || 1;
+    const page = parseInt(req.query.page, 10) || 1;
 
-    const limit =
-      parseInt(req.query.limit, 10) || 20;
+    const limit = parseInt(req.query.limit, 10) || 20;
 
-    const data =
-      await pokemonService.getAllPokemon(
-        page,
-        limit
-      );
+    const data = await pokemonService.getAllPokemon(page, limit);
 
-    const types =
-      await pokemonService.getPokemonTypes();
+    const types = await pokemonService.getPokemonTypes();
 
     res.render('index', {
       ...data,
@@ -41,25 +34,17 @@ export const getHomePage = async (req, res) => {
 /**
  * Pokemon detail page
  */
-export const getPokemonDetails = async (
-  req,
-  res
-) => {
+export const getPokemonDetails = async (req, res) => {
   try {
     const { nameOrId } = req.params;
 
-    const pokemon =
-      await pokemonService.getPokemonDetails(
-        nameOrId
-      );
+    const pokemon = await pokemonService.getPokemonDetails(nameOrId);
 
     if (!pokemon) {
-      return res
-        .status(404)
-        .render('error', {
-          message: 'Pokemon not found',
-          error: `No Pokemon found with name or ID: ${nameOrId}`
-        });
+      return res.status(404).render('error', {
+        message: 'Pokemon not found',
+        error: `No Pokemon found with name or ID: ${nameOrId}`
+      });
     }
 
     res.render('pokemon', {
@@ -67,8 +52,7 @@ export const getPokemonDetails = async (
     });
   } catch (error) {
     res.status(500).render('error', {
-      message:
-        'Failed to load Pokemon details',
+      message: 'Failed to load Pokemon details',
       error: error.message
     });
   }
@@ -77,20 +61,13 @@ export const getPokemonDetails = async (
 /**
  * Search results page
  */
-export const searchPokemon = async (
-  req,
-  res
-) => {
+export const searchPokemon = async (req, res) => {
   try {
     const { q } = req.query;
 
-    const types =
-      await pokemonService.getPokemonTypes();
+    const types = await pokemonService.getPokemonTypes();
 
-    const data =
-      await pokemonService.searchPokemon(
-        q
-      );
+    const data = await pokemonService.searchPokemon(q);
 
     res.render('index', {
       ...data,
@@ -116,32 +93,21 @@ export const searchPokemon = async (
 /**
  * Filter by type page
  */
-export const getPokemonByType = async (
-  req,
-  res
-) => {
+export const getPokemonByType = async (req, res) => {
   try {
     const { type } = req.params;
 
-    const page =
-      parseInt(req.query.page, 10) || 1;
+    const page = parseInt(req.query.page, 10) || 1;
 
-    const types =
-      await pokemonService.getPokemonTypes();
+    const types = await pokemonService.getPokemonTypes();
 
-    const data =
-      await pokemonService.getPokemonByType(
-        type,
-        page
-      );
+    const data = await pokemonService.getPokemonByType(type, page);
 
     if (!data) {
-      return res
-        .status(404)
-        .render('error', {
-          message: 'Type not found',
-          error: `No Pokemon type found: ${type}`
-        });
+      return res.status(404).render('error', {
+        message: 'Type not found',
+        error: `No Pokemon type found: ${type}`
+      });
     }
 
     res.render('index', {
@@ -152,8 +118,7 @@ export const getPokemonByType = async (
     });
   } catch (error) {
     res.status(500).render('error', {
-      message:
-        'Failed to load Pokemon by type',
+      message: 'Failed to load Pokemon by type',
       error: error.message
     });
   }
@@ -166,22 +131,13 @@ export const getPokemonByType = async (
 /**
  * API: Get all Pokemon
  */
-export const apiGetAllPokemon = async (
-  req,
-  res
-) => {
+export const apiGetAllPokemon = async (req, res) => {
   try {
-    const page =
-      parseInt(req.query.page, 10) || 1;
+    const page = parseInt(req.query.page, 10) || 1;
 
-    const limit =
-      parseInt(req.query.limit, 10) || 20;
+    const limit = parseInt(req.query.limit, 10) || 20;
 
-    const data =
-      await pokemonService.getAllPokemon(
-        page,
-        limit
-      );
+    const data = await pokemonService.getAllPokemon(page, limit);
 
     res.json({
       success: true,
@@ -198,49 +154,39 @@ export const apiGetAllPokemon = async (
 /**
  * API: Get Pokemon by name or ID
  */
-export const apiGetPokemonDetails =
-  async (req, res) => {
-    try {
-      const { nameOrId } = req.params;
+export const apiGetPokemonDetails = async (req, res) => {
+  try {
+    const { nameOrId } = req.params;
 
-      const pokemon =
-        await pokemonService.getPokemonDetails(
-          nameOrId
-        );
+    const pokemon = await pokemonService.getPokemonDetails(nameOrId);
 
-      if (!pokemon) {
-        return res.status(404).json({
-          success: false,
-          error: `Pokemon not found: ${nameOrId}`
-        });
-      }
-
-      res.json({
-        success: true,
-        data: pokemon
-      });
-    } catch (error) {
-      res.status(500).json({
+    if (!pokemon) {
+      return res.status(404).json({
         success: false,
-        error: error.message
+        error: `Pokemon not found: ${nameOrId}`
       });
     }
-  };
+
+    res.json({
+      success: true,
+      data: pokemon
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
 
 /**
  * API: Search Pokemon
  */
-export const apiSearchPokemon = async (
-  req,
-  res
-) => {
+export const apiSearchPokemon = async (req, res) => {
   try {
     const { q } = req.query;
 
-    const data =
-      await pokemonService.searchPokemon(
-        q
-      );
+    const data = await pokemonService.searchPokemon(q);
 
     res.json({
       success: true,
@@ -257,13 +203,9 @@ export const apiSearchPokemon = async (
 /**
  * API: Get all types
  */
-export const apiGetTypes = async (
-  _req,
-  res
-) => {
+export const apiGetTypes = async (_req, res) => {
   try {
-    const types =
-      await pokemonService.getPokemonTypes();
+    const types = await pokemonService.getPokemonTypes();
 
     res.json({
       success: true,
@@ -280,35 +222,29 @@ export const apiGetTypes = async (
 /**
  * API: Get Pokemon by type
  */
-export const apiGetPokemonByType =
-  async (req, res) => {
-    try {
-      const { type } = req.params;
+export const apiGetPokemonByType = async (req, res) => {
+  try {
+    const { type } = req.params;
 
-      const page =
-        parseInt(req.query.page, 10) || 1;
+    const page = parseInt(req.query.page, 10) || 1;
 
-      const data =
-        await pokemonService.getPokemonByType(
-          type,
-          page
-        );
+    const data = await pokemonService.getPokemonByType(type, page);
 
-      if (!data) {
-        return res.status(404).json({
-          success: false,
-          error: `Type not found: ${type}`
-        });
-      }
-
-      res.json({
-        success: true,
-        data
-      });
-    } catch (error) {
-      res.status(500).json({
+    if (!data) {
+      return res.status(404).json({
         success: false,
-        error: error.message
+        error: `Type not found: ${type}`
       });
     }
-  };
+
+    res.json({
+      success: true,
+      data
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};

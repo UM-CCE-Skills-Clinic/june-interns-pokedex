@@ -29,9 +29,7 @@ export const getAllPokemon = async (limit = 20, offset = 0) => {
  */
 export const getPokemonByNameOrId = async (nameOrId) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/pokemon/${nameOrId.toString().toLowerCase()}`);
 
     return response.data;
   } catch (error) {
@@ -60,9 +58,7 @@ export const getPokemonSpecies = async (nameOrId) => {
       return null;
     }
 
-    throw new Error(
-      `Failed to fetch Pokemon species: ${error.message}`
-    );
+    throw new Error(`Failed to fetch Pokemon species: ${error.message}`);
   }
 };
 
@@ -72,10 +68,7 @@ export const getPokemonSpecies = async (nameOrId) => {
  * @param {number} limit
  * @returns {Promise<Object>}
  */
-export const searchPokemon = async (
-  query,
-  limit = config.pagination.maxSearchLimit
-) => {
+export const searchPokemon = async (query, limit = config.pagination.maxSearchLimit) => {
   try {
     const response = await axios.get(`${BASE_URL}/pokemon`, {
       params: {
@@ -109,9 +102,7 @@ export const getPokemonTypes = async () => {
 
     return response.data.results;
   } catch (error) {
-    throw new Error(
-      `Failed to fetch Pokemon types: ${error.message}`
-    );
+    throw new Error(`Failed to fetch Pokemon types: ${error.message}`);
   }
 };
 
@@ -122,9 +113,7 @@ export const getPokemonTypes = async () => {
  */
 export const getPokemonByType = async (typeName) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/type/${typeName.toLowerCase()}`
-    );
+    const response = await axios.get(`${BASE_URL}/type/${typeName.toLowerCase()}`);
 
     return response.data.pokemon.map((p) => p.pokemon);
   } catch (error) {
@@ -132,8 +121,6 @@ export const getPokemonByType = async (typeName) => {
       return null;
     }
 
-    throw new Error(
-      `Failed to fetch Pokemon by type: ${error.message}`
-    );
+    throw new Error(`Failed to fetch Pokemon by type: ${error.message}`);
   }
 };

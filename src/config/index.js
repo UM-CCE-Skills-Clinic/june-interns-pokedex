@@ -10,15 +10,12 @@ export const config = {
 
   // PokeAPI settings
   pokeapi: {
-    baseUrl:
-      process.env.POKEAPI_BASE_URL || 'https://pokeapi.co/api/v2'
+    baseUrl: process.env.POKEAPI_BASE_URL || 'https://pokeapi.co/api/v2'
   },
 
   // Pagination settings
   pagination: {
-    defaultLimit:
-      parseInt(process.env.DEFAULT_PAGE_LIMIT, 10) || 20,
-    maxSearchLimit:
-      parseInt(process.env.MAX_SEARCH_LIMIT, 10) || 1000
+    defaultLimit: parseInt(process.env.DEFAULT_PAGE_LIMIT, 10) || 20,
+    maxSearchLimit: parseInt(process.env.MAX_SEARCH_LIMIT, 10) || 1000
   }
 };

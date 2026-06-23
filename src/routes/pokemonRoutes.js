@@ -8,61 +8,34 @@ const router = Router();
 // ============================================
 
 // Home page - list all Pokemon
-router.get(
-  '/',
-  pokemonController.getHomePage
-);
+router.get('/', pokemonController.getHomePage);
 
 // Search Pokemon
-router.get(
-  '/search',
-  pokemonController.searchPokemon
-);
+router.get('/search', pokemonController.searchPokemon);
 
 // Filter by type
-router.get(
-  '/type/:type',
-  pokemonController.getPokemonByType
-);
+router.get('/type/:type', pokemonController.getPokemonByType);
 
 // Pokemon detail page
-router.get(
-  '/pokemon/:nameOrId',
-  pokemonController.getPokemonDetails
-);
+router.get('/pokemon/:nameOrId', pokemonController.getPokemonDetails);
 
 // ============================================
 // API ROUTES (Return JSON)
 // ============================================
 
 // Get all Pokemon (paginated)
-router.get(
-  '/api/pokemon',
-  pokemonController.apiGetAllPokemon
-);
+router.get('/api/pokemon', pokemonController.apiGetAllPokemon);
 
 // Search Pokemon
-router.get(
-  '/api/pokemon/search',
-  pokemonController.apiSearchPokemon
-);
+router.get('/api/pokemon/search', pokemonController.apiSearchPokemon);
 
 // Get single Pokemon
-router.get(
-  '/api/pokemon/:nameOrId',
-  pokemonController.apiGetPokemonDetails
-);
+router.get('/api/pokemon/:nameOrId', pokemonController.apiGetPokemonDetails);
 
 // Get all types
-router.get(
-  '/api/types',
-  pokemonController.apiGetTypes
-);
+router.get('/api/types', pokemonController.apiGetTypes);
 
 // Get Pokemon by type
-router.get(
-  '/api/types/:type',
-  pokemonController.apiGetPokemonByType
-);
+router.get('/api/types/:type', pokemonController.apiGetPokemonByType);
 
 export default router;

@@ -101,9 +101,7 @@ app.use((err, _req, res, _next) => {
 // Only start server outside test environment
 if (nodeEnv !== 'test') {
   app.listen(PORT, () => {
-    console.log(
-      `Pokedex server running at http://localhost:${PORT}`
-    );
+    console.log(`Pokedex server running at http://localhost:${PORT}`);
   });
 }
 
