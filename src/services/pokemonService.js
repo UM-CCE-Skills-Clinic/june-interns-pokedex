@@ -71,8 +71,7 @@ const formatPokemonData = (pokemon, species = null) => {
     captureRate: species?.capture_rate || 0,
     baseHappiness: species?.base_happiness || 0
   };
-};  
-
+};
 
 /**
  * Get a single, fully-formatted Pokemon. Returns null if not found.
@@ -91,7 +90,7 @@ export const getPokemonDetails = async (nameOrId) => {
   }
 
   return formatPokemonData(pokemon, species);
-};  
+};
 
 /**
  * Paginated list of Pokemon with full details for each entry.
@@ -183,4 +182,4 @@ export const getPokemonByType = async (
     hasNextPage: offset + limit < pokemonList.length,
     hasPrevPage: page > 1
   };
-};  
+};

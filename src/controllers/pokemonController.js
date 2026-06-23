@@ -2,6 +2,8 @@
 // VIEW CONTROLLERS (Return HTML via EJS)
 // ============================================
 
+import * as pokemonService from '../services/pokemonService.js';
+
 /**
  * Home page - List all Pokemon with pagination
  */
@@ -29,8 +31,6 @@ export const getHomePage = async (req, res) => {
     });
   }
 };
-
- 
 
 /**
  * Pokemon detail page
@@ -199,4 +199,3 @@ export const apiGetPokemonByType = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-

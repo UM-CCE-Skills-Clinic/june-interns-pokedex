@@ -6,4 +6,4 @@ const router = Router();
 // Mount all Pokemon routes at root
 router.use('/', pokemonRoutes);
 
-export default router;  
+export default router;
