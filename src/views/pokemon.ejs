@@ -1,0 +1,220 @@
+<%- include('partials/header') %>
+
+<%
+  const typeColors = {
+    'normal': '#A8A878',
+    'fighting': '#C03028',
+    'flying': '#A890F0',
+    'poison': '#A040A0',
+    'ground': '#E0C068',
+    'rock': '#B8A038',
+    'bug': '#A8B820',
+    'ghost': '#705898',
+    'steel': '#B8B8D0',
+    'fire': '#F08030',
+    'water': '#6890F0',
+    'grass': '#78C850',
+    'electric': '#F8D030',
+    'psychic': '#F85888',
+    'ice': '#98D8D8',
+    'dragon': '#7038F8',
+    'dark': '#705848',
+    'fairy': '#EE99AC',
+    'unknown': '#68A090',
+    'shadow': '#705898'
+  };
+
+  const primaryType = pokemon.types[0] || 'normal';
+  const primaryColor = typeColors[primaryType] || '#9099a1';
+%>
+
+<!-- Back Button -->
+<div class="mb-6">
+  <button
+    onclick="history.back()"
+    class="flex items-center gap-2 px-4 py-2 text-pokemon-blue hover:bg-blue-50 rounded-lg transition-colors"
+  >
+    <svg
+      class="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 19l-7-7 7-7"
+      ></path>
+    </svg>
+    Back
+  </button>
+</div>
+
+<!-- Hero Section -->
+<div
+  class="rounded-2xl p-8 mb-8 text-white animate-slide-up"
+  style="background: linear-gradient(135deg, <%= primaryColor %> 0%, <%= primaryColor %>dd 100%)"
+>
+  <div class="grid md:grid-cols-2 gap-8 items-start">
+    <!-- Image -->
+    <div class="flex justify-center items-center">
+      <div class="relative">
+        <div
+          class="w-48 h-48 rounded-full opacity-20 absolute inset-0 blur-2xl"
+          style="background-color: white"
+        ></div>
+        <img
+          src="<%= pokemon.image || pokemon.sprite %>"
+          alt="<%= pokemon.displayName %>"
+          class="w-48 h-48 object-contain relative z-10"
+        />
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div>
+      <p class="text-sm font-semibold opacity-90 uppercase tracking-widest">
+        Pokémon #<%= String(pokemon.id).padStart(3, '0') %>
+      </p>
+      <h1 class="text-5xl font-bold mb-4">
+        <%= pokemon.displayName %>
+      </h1>
+      <p class="text-lg opacity-90 mb-4">
+        <%= pokemon.genus %>
+      </p>
+
+      <!-- Types -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <% pokemon.types.forEach((type) => { %>
+          <span
+            class="type-badge"
+            style="background-color: <%= typeColors[type] || '#9099a1' %>"
+          >
+            <%= type %>
+          </span>
+        <% }); %>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <p class="text-sm opacity-75">Height</p>
+          <p class="text-2xl font-bold"><%= pokemon.height %>m</p>
+        </div>
+        <div>
+          <p class="text-sm opacity-75">Weight</p>
+          <p class="text-2xl font-bold"><%= pokemon.weight %>kg</p>
+        </div>
+        <div>
+          <p class="text-sm opacity-75">Total Stats</p>
+          <p class="text-2xl font-bold"><%= pokemon.totalStats %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pokédex Entry -->
+<section class="bg-white rounded-2xl p-8 mb-8 shadow-pokemon">
+  <h2 class="text-2xl font-bold text-gray-900 mb-4">Pokédex Entry</h2>
+  <p class="text-gray-700 leading-relaxed text-lg">
+    <%= pokemon.description %>
+  </p>
+</section>
+
+<!-- Quick Facts -->
+<section class="grid md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-white rounded-2xl p-6 shadow-pokemon">
+    <p class="text-sm font-semibold text-gray-600 uppercase mb-2">Capture Rate</p>
+    <p class="text-3xl font-bold" style="color: <%= primaryColor %>">
+      <%= pokemon.captureRate %>%
+    </p>
+  </div>
+  <div class="bg-white rounded-2xl p-6 shadow-pokemon">
+    <p class="text-sm font-semibold text-gray-600 uppercase mb-2">Base Happiness</p>
+    <p class="text-3xl font-bold" style="color: <%= primaryColor %>">
+      <%= pokemon.baseHappiness %>
+    </p>
+  </div>
+  <div class="bg-white rounded-2xl p-6 shadow-pokemon">
+    <p class="text-sm font-semibold text-gray-600 uppercase mb-2">Color</p>
+    <div class="flex items-center gap-2">
+      <div
+        class="w-12 h-12 rounded-lg"
+        style="background-color: <%= primaryColor %>"
+      ></div>
+      <p class="text-xl font-bold text-gray-900 capitalize">
+        <%= pokemon.color %>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Abilities -->
+<% if (pokemon.abilities && pokemon.abilities.length > 0) { %>
+  <section class="bg-white rounded-2xl p-8 mb-8 shadow-pokemon">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Abilities</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <% pokemon.abilities.forEach((ability) => { %>
+        <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-pokemon-blue transition-colors">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold text-gray-900">
+                <%= ability.name %>
+              </p>
+              <% if (ability.isHidden) { %>
+                <span class="text-xs font-bold text-pokemon-red uppercase">Hidden Ability</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+
+<!-- Base Stats -->
+<% if (pokemon.stats && pokemon.stats.length > 0) { %>
+  <section class="bg-white rounded-2xl p-8 shadow-pokemon">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">Base Stats</h2>
+
+    <div class="space-y-6">
+      <% pokemon.stats.forEach((stat) => {
+        const percentage = Math.min((stat.value / 255) * 100, 100);
+      %>
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <p class="font-semibold text-gray-900 w-24">
+              <%= stat.name %>
+            </p>
+            <p class="text-sm font-bold" style="color: <%= primaryColor %>">
+              <%= stat.value %>
+            </p>
+          </div>
+          <div class="stat-bar">
+            <div
+              class="stat-fill"
+              style="background-color: <%= primaryColor %>; width: 0%"
+              data-width="<%= Math.round(percentage) %>"
+            ></div>
+          </div>
+        </div>
+      <% }); %>
+
+      <!-- Total Stats -->
+      <div class="border-t-2 border-gray-200 pt-6 mt-6">
+        <div class="flex justify-between items-center">
+          <p class="text-lg font-bold text-gray-900">
+            Total Stats
+          </p>
+          <p class="text-2xl font-bold" style="color: <%= primaryColor %>">
+            <%= pokemon.totalStats %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+<% } %>
+
+<%- include('partials/footer') %>
