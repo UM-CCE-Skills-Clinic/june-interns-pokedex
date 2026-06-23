@@ -266,11 +266,13 @@ export const searchPokemon = async (query) => {
 /**
  * All selectable types (special types removed), formatted for display.
  */
+const hiddenTypes = ['unknown', 'shadow', 'stellar'];
+
 export const getPokemonTypes = async () => {
   const types = await pokemonRepository.getPokemonTypes();
 
   return types
-    .filter((t) => t.name !== 'unknown' && t.name !== 'shadow')
+    .filter((t) => !hiddenTypes.includes(t.name))
     .map((t) => ({ name: t.name, displayName: formatName(t.name) }));
 };
 
