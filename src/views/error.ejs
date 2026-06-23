@@ -1,0 +1,72 @@
+<%- include('partials/header') %>
+
+<div class="detail-container" style="max-width: 500px; border-top: 5px solid #ef5350;">
+    <h2 style="color: #ef5350; margin-bottom: 15px;"><%= message %></h2>
+    
+    <p style="color: #666; margin-bottom: 25px; line-height: 1.6;">
+        <%= typeof error === 'object' ? error.message : error %>
+    </p>
+    
+    <a href="a/" class="button" style="text-decoration: none; display: inline-block; background-color: #ef5350; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold;">
+        Return to Home
+    </a>
+</div>
+
+<%- include('partials/footer') %>
+
+index:
+<%- include('partials/header') %>
+
+    <div class="controls">
+        <form action="/search" method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search name or ID..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+            <button type="submit">Search</button>
+        </form>
+
+        <form action="" method="GET" class="filter-form" id="typeForm">
+            <select name="type" onchange="if(this.value) { window.location.href='/type/' + this.value; } else { window.location.href='/'; }">
+                <option value="">All Types</option>
+                <% if (typeof types !== 'undefined' && types) { %>
+                    <% types.forEach(t => { %>
+                        <% 
+                           // Safely extract the type name whether it arrives as an object or a string
+                           const typeName = (t && typeof t === 'object') ? (t.name || '') : String(t); 
+                        %>
+                        <% if (typeName) { %>
+                            <option value="<%= typeName.toLowerCase() %>" <%= (typeof selectedType !== 'undefined' && selectedType === typeName) ? 'selected' : '' %>>
+                                <%= typeName.toUpperCase() %>
+                            </option>
+                        <% } %>
+                    <% }) %>
+                <% } %>
+            </select>
+        </form>
+
+        <% if ((typeof searchQuery !== 'undefined' && searchQuery) || (typeof selectedType !== 'undefined' && selectedType)) { %>
+            <a href="/" class="clear-btn">Clear Filters</a>
+        <% } %>
+    </div>
+
+    <div class="grid">
+        <% if (typeof pokemon !== 'undefined' && pokemon && pokemon.length > 0) { %>
+            <% pokemon.forEach(p => { %>
+                <%- include('partials/card', { pokemon: p }) %>
+            <% }) %>
+        <% } else { %>
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                <h3>No PokÃ©mon found!</h3>
+            </div>
+        <% } %>
+    </div>
+
+    <% if (typeof searchQuery === 'undefined' || !searchQuery) { %>
+        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+            <div class="pagination">
+                <a href="?page=<%= currentPage - 1 %>" class="page-btn <%= !hasPrevPage ? 'disabled' : '' %>">Previous</a>
+                <span class="page-info">Page <%= currentPage %> of <%= totalPages %></span>
+                <a href="?page=<%= currentPage + 1 %>" class="page-btn <%= !hasNextPage ? 'disabled' : '' %>">Next</a>
+            </div>
+        <% } %>
+    <% } %>
+
+<%- include('partials/footer') %>
